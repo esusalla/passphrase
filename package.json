@@ -4,10 +4,15 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "express": "^4.17.1",
+    "history": "^4.10.1",
+    "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-router-dom": "^5.1.2"
+    "react-redux": "^7.2.0",
+    "react-router-dom": "^5.1.2",
+    "redux": "^4.0.5",
+    "uuid": "^7.0.3",
+    "ws": "^7.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
@@ -29,5 +34,9 @@
     "start": "node build/server.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "optionalDependencies": {
+    "bufferutil": "^4.0.1",
+    "utf-8-validate": "^5.0.2"
+  }
 }

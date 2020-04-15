@@ -26,4 +26,5 @@ module.exports = {
     ],
   },
   externals: [nodeExternals()],
+  devtool: 'inline-source-map',
 };

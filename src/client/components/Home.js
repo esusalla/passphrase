@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Home = () => (
-  <div>
-    <Link to="/create">Create Room</Link>
-    <br />
-    <Link to="/join">Join Room</Link>
-  </div>
-);
+function Home() {
+  return (
+    <div>
+      <Link to="/join">Join Game</Link>
+      <br />
+      <Link to="/create">Create Game</Link>
+    </div>
+  );
+}
 
 export default Home;
