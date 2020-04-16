@@ -9,8 +9,7 @@ const nameLengthLimit = 16;
 
 function JoinFormContainer() {
   const connected = useSelector((state) => state.connected);
-  const name = useSelector((state) => state.name);
-  const dispatch = useDispatch();
+  const gameCode = useSelector((state) => state.gameCode);
   const [input, setInput] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     {
@@ -18,6 +17,7 @@ function JoinFormContainer() {
       gameCode: '',
     },
   );
+  const dispatch = useDispatch();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -32,7 +32,7 @@ function JoinFormContainer() {
     }
   };
 
-  if (connected && name) return <Redirect to="/lobby" />;
+  if (connected && gameCode) return <Redirect to="/lobby" />;
   return <JoinForm gameCode={input.gameCode} handleChange={handleChange} handleSubmit={handleSubmit} name={input.name} />;
 }
 

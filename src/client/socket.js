@@ -19,18 +19,26 @@ function socket() {
       case actions.INIT_AFTER_JOIN:
         batch(() => {
           store.dispatch(actions.setName(data.name));
-          store.dispatch(actions.setGameCode(data.gameCode));
           store.dispatch(actions.setHostName(data.hostName));
+          store.dispatch(actions.setCategory(data.category));
+          store.dispatch(actions.setSkipsAllowed(data.skipsAllowed));
           store.dispatch(actions.setTeams(data.teamOne, data.teamTwo));
+          store.dispatch(actions.setGameCode(data.gameCode));
         });
         break;
       case actions.INIT_AFTER_CREATE:
         batch(() => {
           store.dispatch(actions.setName(data.name));
-          store.dispatch(actions.setGameCode(data.gameCode));
           store.dispatch(actions.setHostName(data.name));
           store.dispatch(actions.setTeams([data.name], []));
+          store.dispatch(actions.setGameCode(data.gameCode));
         });
+        break;
+      case actions.SET_CATEGORY:
+        store.dispatch(actions.setCategory(data.category));
+        break;
+      case actions.SET_SKIPS_ALLOWED:
+        store.dispatch(actions.setSkipsAllowed(data.skipsAllowed));
         break;
       case actions.SET_TEAMS:
         store.dispatch(actions.setTeams(data.teamOne, data.teamTwo));
@@ -52,6 +60,12 @@ function socket() {
         socket.onmessage = onMessage(store);
         break;
       }
+      case actions.SET_CATEGORY:
+      case actions.SET_SKIPS_ALLOWED:
+      case actions.CHANGE_PLAYER_TEAM:
+        socket.send(JSON.stringify(action));
+        next(action);
+        break;
       default:
         next(action);
     }

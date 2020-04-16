@@ -9,8 +9,9 @@ const nameLengthLimit = 16;
 
 function CreateFormContainer() {
   const connected = useSelector((state) => state.connected);
-  const dispatch = useDispatch();
+  const gameCode = useSelector((state) => state.gameCode);
   const [name, setName] = useState('');
+  const dispatch = useDispatch();
 
   const handleChange = (event) => {
     if (event.target.value.length <= nameLengthLimit) setName(event.target.value);
@@ -24,7 +25,7 @@ function CreateFormContainer() {
     }
   };
 
-  if (connected) return <Redirect to="/setup" />;
+  if (connected && gameCode) return <Redirect to="/setup" />;
   return <CreateForm handleChange={handleChange} handleSubmit={handleSubmit} name={name} />;
 }
 

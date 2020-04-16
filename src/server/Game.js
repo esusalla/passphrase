@@ -7,7 +7,8 @@ class Game {
     // Rules
     this.minPlayers = 4;
     this.scoreGoal = 7;
-    this.allowedSkips = 2;
+    this.category = 'EVERYTHING';
+    this.skipsAllowed = 2;
 
     // Players and teams
     this.host = null;
