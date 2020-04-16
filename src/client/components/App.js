@@ -2,10 +2,10 @@ import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Home from './Home';
-import GameCreateContainer from '../containers/GameCreateContainer';
-import GameJoinContainer from '../containers/GameJoinContainer';
-import GameLobbyContainer from '../containers/GameLobbyContainer';
-import GameSetupContainer from '../containers/GameSetupContainer';
+import CreateFormContainer from '../containers/CreateFormContainer';
+import JoinFormContainer from '../containers/JoinFormContainer';
+import LobbyContainer from '../containers/LobbyContainer';
+import SetupContainer from '../containers/SetupContainer';
 
 
 function App() {
@@ -13,10 +13,10 @@ function App() {
     <BrowserRouter>
       <Switch>
         <Route path="/" exact component={Home} />
-        <Route path="/join" component={GameJoinContainer} />
-        <Route path="/create" component={GameCreateContainer} />
-        <Route path="/lobby" component={GameLobbyContainer} />
-        <Route path="/setup" component={GameSetupContainer} />
+        <Route path="/join" component={JoinFormContainer} />
+        <Route path="/create" component={CreateFormContainer} />
+        <Route path="/lobby" component={LobbyContainer} />
+        <Route path="/setup" component={SetupContainer} />
       </Switch>
     </BrowserRouter>
   );

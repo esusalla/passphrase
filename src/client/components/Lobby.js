@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-function GameSetup(props) {
-  const { gameCode, teamOne, teamTwo } = props;
+function Lobby(props) {
+  const { gameCode, hostName, teamOne, teamTwo } = props;
   const teamOneList = teamOne.map((playerName) => <li key={playerName}>{playerName}</li>);
   const teamTwoList = teamTwo.map((playerName) => <li key={playerName}>{playerName}</li>);
 
   return (
     <div>
-      <h2>{`SETUP (${gameCode})`}</h2>
+      <h2>{`LOBBY (${gameCode})`}</h2>
+      <h4>{`Your host is ${hostName}`}</h4>
       <h5>Team One</h5>
       <ul>{teamOneList}</ul>
       <h5>Team Two</h5>
@@ -17,9 +18,10 @@ function GameSetup(props) {
   );
 }
 
-GameSetup.propTypes = {
+Lobby.propTypes = {
   gameCode: PropTypes.string,
+  hostName: PropTypes.string,
   teamOne: PropTypes.arrayOf(PropTypes.string),
   teamTwo: PropTypes.arrayOf(PropTypes.string),
 };
-export default GameSetup;
+export default Lobby;

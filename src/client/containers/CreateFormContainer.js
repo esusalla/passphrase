@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import GameCreate from '../components/GameCreate';
+import CreateForm from '../components/CreateForm';
 import { CONNECT_SOCKET } from '../actions';
 
 const nameLengthLimit = 16;
 
-function GameCreateContainer() {
+function CreateFormContainer() {
   const connected = useSelector((state) => state.connected);
   const dispatch = useDispatch();
   const [name, setName] = useState('');
@@ -25,7 +25,7 @@ function GameCreateContainer() {
   };
 
   if (connected) return <Redirect to="/setup" />;
-  return <GameCreate handleChange={handleChange} handleSubmit={handleSubmit} name={name} />;
+  return <CreateForm handleChange={handleChange} handleSubmit={handleSubmit} name={name} />;
 }
 
-export default GameCreateContainer;
+export default CreateFormContainer;

@@ -3,7 +3,6 @@ const crypto = require('crypto');
 class Game {
   constructor() {
     this.gameCode = crypto.randomBytes(20).toString('hex').substring(0, 4).toUpperCase();
-    this.inProgress = false;
 
     // Rules
     this.minPlayers = 4;
@@ -26,18 +25,9 @@ class Game {
     this.seenWords = new Set();
   }
 
-  /*
-  get gameCode() {
-    return this.gameCode;
-  }
-  */
-
   addPlayer(player) {
     // Check if a player with this name already exists in the game
-    if (this.players.has(player.name)) {
-      console.log(`Player named ${player.name} already exists`);
-      return false;
-    }
+    if (this.players.has(player.name)) return false;
 
     // If new room without host, creator becomes the host
     if (!this.host) this.host = player;
@@ -55,16 +45,16 @@ class Game {
     // Check if minimum number of players is met
     if (teamOneLen + teamTwoLen < this.minPlayers) {
       console.log(`Must have ${this.minPlayers} or more players`);
-      return;
+      return false;
     }
 
     // Check if teams have same number of players
     if (teamOneLen !== teamTwoLen) {
       console.log('Teams must have the same number of players');
-      return;
+      return false;
     }
 
-    this.inProgress = true;
+    return true;
   }
 
   reset() {

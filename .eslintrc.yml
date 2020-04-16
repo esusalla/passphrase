@@ -22,6 +22,7 @@ rules: {
   no-param-reassign: 0,
   no-restricted-syntax: 0,
   no-shadow: 0,
+  no-underscore-dangle: 0,
   object-curly-newline: 0,
   react/jsx-filename-extension: 0,
   react/no-render-return-value: 0,

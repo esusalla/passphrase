@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-function GameCreate(props) {
+function CreateForm(props) {
   const { handleChange, handleSubmit, name } = props;
 
   return (
@@ -15,10 +15,10 @@ function GameCreate(props) {
   );
 }
 
-GameCreate.propTypes = {
+CreateForm.propTypes = {
   handleChange: PropTypes.func,
   handleSubmit: PropTypes.func,
   name: PropTypes.string,
 };
 
-export default GameCreate;
+export default CreateForm;

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-function GameJoin(props) {
+function JoinForm(props) {
   const { gameCode, handleChange, handleSubmit, name } = props;
 
   return (
@@ -19,11 +19,11 @@ function GameJoin(props) {
   );
 }
 
-GameJoin.propTypes = {
+JoinForm.propTypes = {
   gameCode: PropTypes.string,
   handleChange: PropTypes.func,
   handleSubmit: PropTypes.func,
   name: PropTypes.string,
 };
 
-export default GameJoin;
+export default JoinForm;
