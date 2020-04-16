@@ -12,22 +12,23 @@ wss.on('connection', (ws, req) => {
   const { pathname, query } = parsedUrl;
 
   ws.id = uuidv4();
-  ws.name = query.name;
+  ws.name = query.name.toUpperCase();
   console.log(`New connection from ${ws.id} (${ws.name})`);
 
   if (pathname === '/join') {
-    console.log(`${query.name} is joining game ${query.gameCode}`);
-
-    const game = games.get(query.gameCode.toUpperCase());
-    if (!game) {
+    if (!games.has(query.gameCode.toUpperCase())) {
       // send game doesn't exist error
+      console.log('Invalid game code. Please create a new game or try to join another');
       ws.close();
       return;
     }
 
+    console.log(`${query.name} is joining game ${query.gameCode}`);
+    const game = games.get(query.gameCode.toUpperCase());
     const added = game.addPlayer(ws);
     if (!added) {
       // send player already exists error
+      console.log('Player with that name already exists');
       ws.close();
       return;
     }

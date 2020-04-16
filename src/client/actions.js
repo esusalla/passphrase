@@ -1,5 +1,3 @@
-import history from './history';
-
 export const CONNECT_SOCKET = 'CONNECT_SOCKET';
 export const SET_CONNECTED = 'SET_CONNECTED';
 export const INIT_AFTER_JOIN = 'INIT_AFTER_JOIN';
@@ -15,12 +13,10 @@ export function setConnected(connected) {
 }
 
 export function initAfterJoin(name, gameCode, hostName, teamOne, teamTwo) {
-  history.push('/lobby');
   return { type: INIT_AFTER_JOIN, name, gameCode, hostName, teamOne, teamTwo };
 }
 
 export function initAfterCreate(name, gameCode, teamOne) {
-  history.push('/setup');
   return { type: INIT_AFTER_CREATE, name, gameCode, teamOne };
 }
 

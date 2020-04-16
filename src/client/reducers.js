@@ -21,7 +21,7 @@ function reducers(state = initialState, action) {
     case INIT_AFTER_JOIN:
       return { ...state, name: action.name, gameCode: action.gameCode, hostName: action.hostName, teamOne: action.teamOne, teamTwo: action.teamTwo };
     case INIT_AFTER_CREATE:
-      return { ...state, name: action.name, gameCode: action.gameCode, hostName: action.name, teamOne: action.teamOne };
+      return { ...state, name: action.name, gameCode: action.gameCode, hostName: action.name, teamOne: action.teamOne, teamTwo: [] };
     case SET_TEAMS:
       return { ...state, teamOne: action.teamOne, teamTwo: action.teamTwo };
     default:

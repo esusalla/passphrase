@@ -6,11 +6,12 @@ import GameSetup from '../components/GameSetup';
 
 function GameSetupContainer() {
   const connected = useSelector((state) => state.connected);
+  const gameCode = useSelector((state) => state.gameCode);
   const teamOne = useSelector((state) => state.teamOne);
   const teamTwo = useSelector((state) => state.teamTwo);
 
   if (!connected) return <Redirect to="/" />;
-  return <GameSetup teamOne={teamOne} teamTwo={teamTwo} />;
+  return <GameSetup gameCode={gameCode} teamOne={teamOne} teamTwo={teamTwo} />;
 }
 
 export default GameSetupContainer;
