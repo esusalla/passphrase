@@ -7,6 +7,7 @@ import Lobby from '../components/Lobby';
 function LobbyContainer() {
   const connected = useSelector((state) => state.connected);
   const gameCode = useSelector((state) => state.gameCode);
+  const gameStage = useSelector((state) => state.gameStage);
   const hostName = useSelector((state) => state.hostName);
   const category = useSelector((state) => state.category);
   const skipsAllowed = useSelector((state) => state.skipsAllowed);
@@ -14,6 +15,7 @@ function LobbyContainer() {
   const teamTwo = useSelector((state) => state.teamTwo);
 
   if (!connected) return <Redirect to="/" />;
+  if (gameStage === 'roundStart') return <Redirect to="/round-start" />;
   return (
     <Lobby
       category={category}

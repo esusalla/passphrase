@@ -24,7 +24,7 @@ Lobby.propTypes = {
   category: PropTypes.string,
   gameCode: PropTypes.string,
   hostName: PropTypes.string,
-  skipsAllowed: PropTypes.string,
+  skipsAllowed: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   teamOne: PropTypes.arrayOf(PropTypes.string),
   teamTwo: PropTypes.arrayOf(PropTypes.string),
 };

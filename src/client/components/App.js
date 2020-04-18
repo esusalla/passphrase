@@ -6,7 +6,9 @@ import CreateFormContainer from '../containers/CreateFormContainer';
 import JoinFormContainer from '../containers/JoinFormContainer';
 import LobbyContainer from '../containers/LobbyContainer';
 import SetupContainer from '../containers/SetupContainer';
-
+import RoundStartContainer from '../containers/RoundStartContainer';
+import RoundActiveContainer from '../containers/RoundActiveContainer';
+import GameEndContainer from '../containers/GameEndContainer';
 
 function App() {
   return (
@@ -17,6 +19,9 @@ function App() {
         <Route path="/create" component={CreateFormContainer} />
         <Route path="/lobby" component={LobbyContainer} />
         <Route path="/setup" component={SetupContainer} />
+        <Route path="/round-start" component={RoundStartContainer} />
+        <Route path="/round-active" component={RoundActiveContainer} />
+        <Route path="/end" component={GameEndContainer} />
       </Switch>
     </BrowserRouter>
   );

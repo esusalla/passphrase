@@ -10,7 +10,11 @@ function socket() {
   };
 
   const onClose = (store) => () => {
-    store.dispatch(actions.setConnected(false));
+    batch(() => {
+      store.dispatch(actions.setGameStage('setup'));
+      store.dispatch(actions.setTeams([], []));
+      store.dispatch(actions.setConnected(false));
+    });
   };
 
   const onMessage = (store) => (msg) => {
@@ -34,6 +38,13 @@ function socket() {
           store.dispatch(actions.setGameCode(data.gameCode));
         });
         break;
+      case actions.INIT_AFTER_START:
+        batch(() => {
+          store.dispatch(actions.setSkipsAllowed(data.skipsAllowed));
+          store.dispatch(actions.setPlayerOrder(data.playerOrder));
+          store.dispatch(actions.setGameStage(data.gameStage));
+        });
+        break;
       case actions.SET_CATEGORY:
         store.dispatch(actions.setCategory(data.category));
         break;
@@ -42,6 +53,38 @@ function socket() {
         break;
       case actions.SET_TEAMS:
         store.dispatch(actions.setTeams(data.teamOne, data.teamTwo));
+        break;
+      case actions.SET_GAME_STAGE:
+        store.dispatch(actions.setGameStage(data.gameStage));
+        break;
+      case actions.UPDATE_AFTER_ROUND_START:
+        batch(() => {
+          store.dispatch(actions.setLastWord(data.lastWord));
+          store.dispatch(actions.setGameStage(data.gameStage));
+        });
+        break;
+      case actions.SET_CURRENT_WORD:
+        store.dispatch(actions.setCurrentWord(data.currentWord));
+        break;
+      case actions.UPDATE_AFTER_PASS:
+        batch(() => {
+          store.dispatch(actions.setLastWord(data.lastWord));
+          store.dispatch(actions.setPlayerOrder(data.playerOrder));
+        });
+        break;
+      case actions.UPDATE_AFTER_ROUND_END:
+        batch(() => {
+          store.dispatch(actions.setScores(data.teamOneScore, data.teamTwoScore));
+          store.dispatch(actions.setSkipsAvailable(data.skipsAllowed));
+          store.dispatch(actions.setPlayerOrder(data.playerOrder));
+          store.dispatch(actions.setGameStage(data.gameStage));
+        });
+        break;
+      case actions.UPDATE_AFTER_GAME_END:
+        batch(() => {
+          store.dispatch(actions.setScores(data.teamOneScore, data.teamTwoScore));
+          store.dispatch(actions.setGameStage(data.gameStage));
+        });
         break;
       default:
         break;
@@ -60,9 +103,14 @@ function socket() {
         socket.onmessage = onMessage(store);
         break;
       }
+      // Messages passed back to server from client
       case actions.SET_CATEGORY:
       case actions.SET_SKIPS_ALLOWED:
       case actions.CHANGE_PLAYER_TEAM:
+      case actions.START_GAME:
+      case actions.START_ROUND:
+      case actions.USE_SKIP:
+      case actions.PASS_TO_NEXT_PLAYER:
         socket.send(JSON.stringify(action));
         next(action);
         break;

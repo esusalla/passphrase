@@ -1,17 +1,20 @@
 import * as actions from './actions';
 
 const initialState = {
+  gameStage: 'setup',
   connected: false,
   name: '',
   gameCode: '',
   hostName: '',
   category: 'EVERYTHING',
   skipsAllowed: '2',
+  skipsAvailable: '2',
   teamOne: [],
   teamTwo: [],
   playerOrder: [],
   teamOneScore: 0,
   teamTwoScore: 0,
+  currentWord: '',
   lastWord: '',
   skipsUsed: 0,
 };
@@ -29,7 +32,7 @@ function reducers(state = initialState, action) {
     case actions.SET_CATEGORY:
       return { ...state, category: action.category };
     case actions.SET_SKIPS_ALLOWED:
-      return { ...state, skipsAllowed: action.skipsAllowed };
+      return { ...state, skipsAllowed: action.skipsAllowed, skipsAvailable: action.skipsAllowed };
     case actions.SET_TEAMS:
       return { ...state, teamOne: action.teamOne, teamTwo: action.teamTwo };
     case actions.CHANGE_PLAYER_TEAM: {
@@ -44,6 +47,22 @@ function reducers(state = initialState, action) {
       }
       return { ...state, teamOne: updatedTeamOne, teamTwo: updatedTeamTwo };
     }
+    case actions.SET_PLAYER_ORDER:
+      return { ...state, playerOrder: action.playerOrder };
+    case actions.SET_GAME_STAGE:
+      return { ...state, gameStage: action.gameStage };
+    case actions.SET_CURRENT_WORD:
+      return { ...state, currentWord: action.currentWord };
+    case actions.SET_SKIPS_AVAILABLE:
+      return { ...state, skipsAvailable: action.skipsAvailable };
+    case actions.USE_SKIP:
+      if (!isNaN(state.skipsAvailable)) {
+        const skipsAvailable = state.skipsAvailable - 1;
+        return { ...state, skipsAvailable };
+      }
+      return { ...state };
+    case actions.SET_SCORES:
+      return { ...state, teamOneScore: action.teamOneScore, teamTwoScore: action.teamTwoScore };
     default:
       return state;
   }

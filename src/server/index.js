@@ -57,8 +57,15 @@ wss.on('connection', (ws, req) => {
     ws.close();
   }
 
-  ws.on('close', () => {
-    // Handle any close logic
+  ws.on('close', (ws) => {
+    // On socket close, check if all other players (sockets) in game are also close. If so, delete game
+    if (!games.has(ws.gameCode)) return;
+    const game = games.get(ws.gameCode);
+
+    for (const player of game.players.values()) {
+      if (player.readyState !== WebSocket.CLOSED) return;
+    }
+    games.delete(game.gameCode);
   });
 
   ws.on('message', (msg) => {
@@ -111,6 +118,65 @@ wss.on('connection', (ws, req) => {
         for (const [playerName, player] of game.players) {
           if (playerName !== ws.name) player.send(JSON.stringify({ type: 'SET_TEAMS', teamOne: game.teamOne, teamTwo: game.teamTwo }));
         }
+        break;
+      }
+      case 'START_GAME': {
+        if (!games.has(ws.gameCode)) break;
+        const game = games.get(ws.gameCode);
+        if (ws.uuid !== game.host.uuid) break;
+        if (!game.startGame()) break;
+
+        // Send updated game stage and player order to all players
+        for (const player of game.players.values()) {
+          player.send(JSON.stringify({ type: 'INIT_AFTER_START', gameStage: game.gameStage, playerOrder: game.playerOrder, skipsAllowed: game.skipsAllowed }));
+        }
+        break;
+      }
+      case 'START_ROUND': {
+        if (!games.has(ws.gameCode)) break;
+        const game = games.get(ws.gameCode);
+        if (ws.uuid !== game.getActivePlayer().uuid) break;
+        const player = game.getActivePlayer();
+        game.startRound();
+
+        // Clear last word from last round and Send updated game stage to all players
+        for (const player of game.players.values()) {
+          player.send(JSON.stringify({ type: 'UPDATE_AFTER_ROUND_START', gameStage: game.gameStage, lastWord: '' }));
+        }
+
+        // Send new word to active player
+        player.send(JSON.stringify({ type: 'SET_CURRENT_WORD', currentWord: game.currentWord }));
+        break;
+      }
+      case 'USE_SKIP': {
+        if (!games.has(ws.gameCode)) break;
+        const game = games.get(ws.gameCode);
+        const activePlayer = game.getActivePlayer();
+        if (ws.uuid !== activePlayer.uuid) break;
+        if (activePlayer.skipsAvailable === 'Unlimited' || activePlayer.skipsAvailable > 0) {
+          if (!isNaN(activePlayer.skipsAvailable)) activePlayer.skipsAvailable--;
+          game.skipWord();
+
+          // Send new word to active player
+          activePlayer.send(JSON.stringify({ type: 'SET_CURRENT_WORD', currentWord: game.currentWord }));
+        }
+        break;
+      }
+      case 'PASS_TO_NEXT_PLAYER': {
+        if (!games.has(ws.gameCode)) break;
+        const game = games.get(ws.gameCode);
+        let activePlayer = game.getActivePlayer();
+        if (ws.uuid !== activePlayer.uuid) break;
+        game.passToNextPlayer();
+
+        // Send updated player order to all players
+        for (const player of game.players.values()) {
+          player.send(JSON.stringify({ type: 'UPDATE_AFTER_PASS', playerOrder: game.playerOrder, lastWord: game.lastWord }));
+        }
+
+        // Send new word to new active player
+        activePlayer = game.getActivePlayer();
+        activePlayer.send(JSON.stringify({ type: 'SET_CURRENT_WORD', currentWord: game.currentWord }));
         break;
       }
       default:

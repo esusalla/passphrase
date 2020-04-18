@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 function Setup(props) {
-  const { category, categoryList, gameCode, handleCategoryChange, handleSkipsAllowedChange, handlePlayerTeamChange, skipsAllowed, skipList, teamOne, teamTwo } = props;
+  const { category, categoryList, gameCode, handleCategoryChange, handlePlayerTeamChange, handleSkipsAllowedChange, handleStartGame, skipsAllowed, skipList, teamOne, teamTwo } = props;
   const categoryOptions = categoryList.map((category) => <option key={category} value={category}>{category}</option>);
   const skipOptions = skipList.map((skip) => <option key={skip} value={skip}>{skip}</option>);
   const teamOneList = teamOne.map((playerName) => <li key={playerName} onClick={handlePlayerTeamChange}>{playerName}</li>);
@@ -28,6 +28,7 @@ function Setup(props) {
       <ul>{teamOneList}</ul>
       <h5>Team Two</h5>
       <ul>{teamTwoList}</ul>
+      <button onClick={handleStartGame} type="submit">Start Game</button>
     </div>
   );
 }
@@ -37,9 +38,10 @@ Setup.propTypes = {
   categoryList: PropTypes.arrayOf(PropTypes.string),
   gameCode: PropTypes.string,
   handleCategoryChange: PropTypes.func,
-  handleSkipsAllowedChange: PropTypes.func,
   handlePlayerTeamChange: PropTypes.func,
-  skipsAllowed: PropTypes.string,
+  handleSkipsAllowedChange: PropTypes.func,
+  handleStartGame: PropTypes.func,
+  skipsAllowed: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   skipList: PropTypes.arrayOf(PropTypes.string),
   teamOne: PropTypes.arrayOf(PropTypes.string),
   teamTwo: PropTypes.arrayOf(PropTypes.string),
