@@ -53,6 +53,8 @@ function reducers(state = initialState, action) {
       return { ...state, gameStage: action.gameStage };
     case actions.SET_CURRENT_WORD:
       return { ...state, currentWord: action.currentWord };
+    case actions.SET_LAST_WORD:
+      return { ...state, lastWord: action.lastWord };
     case actions.SET_SKIPS_AVAILABLE:
       return { ...state, skipsAvailable: action.skipsAvailable };
     case actions.USE_SKIP:

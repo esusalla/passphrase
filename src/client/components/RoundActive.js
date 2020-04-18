@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 function RoundActive(props) {
-  const { currentWord, handlePassToNextPlayer, handleUseSkip, name, playerOrder, skipsAvailable, teamOneScore, teamTwoScore } = props;
+  const { currentWord, handlePassToNextPlayer, handleUseSkip, lastWord, name, playerOrder, skipsAvailable, teamOneScore, teamTwoScore } = props;
   const playerOrderList = playerOrder.map((playerName) => <li key={playerName}>{playerName}</li>);
 
   const currentPlayerInfo = (
@@ -16,6 +16,7 @@ function RoundActive(props) {
 
   const otherPlayerInfo = (
     <div>
+      {lastWord ? <p>{`Last word: ${lastWord}`}</p> : null}
       {playerOrder[1] === name ? <p>You're up next. Be ready!</p> : null}
       <ul>{playerOrderList}</ul>
     </div>
@@ -35,6 +36,7 @@ RoundActive.propTypes = {
   currentWord: PropTypes.string,
   handlePassToNextPlayer: PropTypes.func,
   handleUseSkip: PropTypes.func,
+  lastWord: PropTypes.string,
   name: PropTypes.string,
   playerOrder: PropTypes.arrayOf(PropTypes.string),
   skipsAvailable: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

@@ -9,6 +9,7 @@ function RoundActiveContainer() {
   const connected = useSelector((state) => state.connected);
   const currentWord = useSelector((state) => state.currentWord);
   const gameStage = useSelector((state) => state.gameStage);
+  const lastWord = useSelector((state) => state.lastWord);
   const name = useSelector((state) => state.name);
   const playerOrder = useSelector((state) => state.playerOrder);
   const skipsAllowed = useSelector((state) => state.skipsAllowed);
@@ -39,6 +40,7 @@ function RoundActiveContainer() {
       currentWord={currentWord}
       handlePassToNextPlayer={handlePassToNextPlayer}
       handleUseSkip={handleUseSkip}
+      lastWord={lastWord}
       name={name}
       playerOrder={playerOrder}
       skipsAvailable={skipsAvailable}
