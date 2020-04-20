@@ -65,6 +65,8 @@ function reducers(state = initialState, action) {
       return { ...state };
     case actions.SET_SCORES:
       return { ...state, teamOneScore: action.teamOneScore, teamTwoScore: action.teamTwoScore };
+    case actions.RESTART_GAME:
+      return { ...state, teamOneScore: 0, teamTwoScore: 0, lastWord: '' };
     default:
       return state;
   }

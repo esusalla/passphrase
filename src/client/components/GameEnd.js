@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 function GameEnd(props) {
-  const { handleRestartGame, teamOneScore, teamTwoScore } = props;
+  const { handleRestartGame, hostName, name, teamOneScore, teamTwoScore } = props;
   return (
     <div>
       <p>GAME ENDED</p>
@@ -13,12 +13,15 @@ function GameEnd(props) {
       </p>
       <p>{`Team One: ${teamOneScore}`}</p>
       <p>{`Team Two: ${teamTwoScore}`}</p>
+      {name === hostName ? <button onClick={handleRestartGame} type="submit">Restart Game</button> : null}
     </div>
   );
 }
 
 GameEnd.propTypes = {
   handleRestartGame: PropTypes.func,
+  hostName: PropTypes.string,
+  name: PropTypes.string,
   teamOneScore: PropTypes.number,
   teamTwoScore: PropTypes.number,
 };

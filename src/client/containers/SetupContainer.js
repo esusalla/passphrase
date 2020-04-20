@@ -11,7 +11,9 @@ function SetupContainer() {
   const categoryList = ['EVERYTHING', 'SCIENCE', 'PEOPLE', 'HISTORY']; // update after creating in postgres
   const gameCode = useSelector((state) => state.gameCode);
   const gameStage = useSelector((state) => state.gameStage);
+  const hostName = useSelector((state) => state.hostName);
   const minPlayers = 2;
+  const name = useSelector((state) => state.name);
   const skipsAllowed = useSelector((state) => state.skipsAllowed);
   const skipList = ['0', '1', '2', '3', 'Unlimited'];
   const teamOne = useSelector((state) => state.teamOne);
@@ -20,6 +22,7 @@ function SetupContainer() {
 
   const handleCategoryChange = (event) => dispatch(actions.setCategory(event.target.value));
   const handlePlayerTeamChange = (event) => dispatch(actions.changePlayerTeam(event.target.textContent));
+  const handleRandomizeTeams = () => dispatch(actions.randomizeTeams());
   const handleSkipsAllowedChange = (event) => dispatch(actions.setSkipsAllowed(event.target.value));
   const handleStartGame = () => {
     const teamOneLen = teamOne.length;
@@ -42,12 +45,14 @@ function SetupContainer() {
 
   if (!connected) return <Redirect to="/" />;
   if (gameStage === 'roundStart') return <Redirect to="/round-start" />;
+  if (name !== hostName) return <Redirect to="/lobby" />;
   return (
     <Setup
       category={category}
       categoryList={categoryList}
       gameCode={gameCode}
       handleCategoryChange={handleCategoryChange}
+      handleRandomizeTeams={handleRandomizeTeams}
       handleSkipsAllowedChange={handleSkipsAllowedChange}
       handlePlayerTeamChange={handlePlayerTeamChange}
       handleStartGame={handleStartGame}

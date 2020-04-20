@@ -20,7 +20,7 @@ function CreateFormContainer() {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (name) {
-      const url = `ws://localhost:8080/create?name=${name}`;
+      const url = `ws://192.168.1.21:8080/create?name=${name}`; // TODO: update for deployment
       dispatch({ type: CONNECT_SOCKET, url });
     }
   };

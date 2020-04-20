@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { batch, useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
@@ -17,6 +17,39 @@ function RoundActiveContainer() {
   const teamOneScore = useSelector((state) => state.teamOneScore);
   const teamTwoScore = useSelector((state) => state.teamTwoScore);
   const dispatch = useDispatch();
+  const [audio, setAudio] = useState(new Audio());
+
+  useEffect(() => {
+    if (!connected) {
+      audio.pause();
+    }
+    if (gameStage === 'roundStart') {
+      audio.pause();
+      const roundEnd = new Audio('./audio/round-end.mp3');
+      roundEnd.play();
+    } else if (gameStage === 'end') {
+      audio.pause();
+    } else if (gameStage === 'roundActive') {
+      let tickTock = new Audio('./audio/tick-tock-1.mp3');
+      tickTock.loop = true;
+      tickTock.play();
+      setAudio(tickTock);
+      setTimeout(() => {
+        tickTock.pause();
+        tickTock = new Audio('./audio/tick-tock-2.mp3');
+        tickTock.loop = true;
+        tickTock.play();
+        setAudio(tickTock);
+        setTimeout(() => {
+          tickTock.pause();
+          tickTock = new Audio('./audio/tick-tock-3.mp3');
+          tickTock.loop = true;
+          tickTock.play();
+          setAudio(tickTock);
+        }, 15000);
+      }, 29000);
+    }
+  }, [connected, gameStage]);
 
   const handleUseSkip = () => {
     if (skipsAvailable === 'Unlimited' || skipsAvailable > 0) {

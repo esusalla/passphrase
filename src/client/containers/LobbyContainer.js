@@ -9,6 +9,7 @@ function LobbyContainer() {
   const gameCode = useSelector((state) => state.gameCode);
   const gameStage = useSelector((state) => state.gameStage);
   const hostName = useSelector((state) => state.hostName);
+  const name = useSelector((state) => state.name);
   const category = useSelector((state) => state.category);
   const skipsAllowed = useSelector((state) => state.skipsAllowed);
   const teamOne = useSelector((state) => state.teamOne);
@@ -16,6 +17,7 @@ function LobbyContainer() {
 
   if (!connected) return <Redirect to="/" />;
   if (gameStage === 'roundStart') return <Redirect to="/round-start" />;
+  if (name === hostName) return <Redirect to="/setup" />;
   return (
     <Lobby
       category={category}

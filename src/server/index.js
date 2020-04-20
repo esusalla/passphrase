@@ -6,15 +6,23 @@ import Game from './Game';
 
 const categoryList = ['EVERYTHING', 'SCIENCE', 'PEOPLE', 'HISTORY']; // get from postgres
 const skipList = ['0', '1', '2', '3', 'Unlimited'];
+const nameLengthLimit = 16;
 const games = new Map();
 const wss = new WebSocket.Server({ port: 8080 });
+
+function heartbeat() {
+  this.isAlive = true;
+}
 
 wss.on('connection', (ws, req) => {
   const parsedUrl = url.parse(req.url, true);
   const { pathname, query } = parsedUrl;
 
+  ws.isAlive = true;
+  ws.on('pong', heartbeat);
   ws.uuid = uuidv4();
-  ws.name = query.name.toUpperCase();
+  ws.name = query.name.length > nameLengthLimit ? query.name.substring(0, nameLengthLimit).toUpperCase() : query.name.toUpperCase();
+  let gameCode = ''; // Used for clearing game after socket has been closed and no longer holds reference
 
   if (pathname === '/join') {
     // Check if game code is valid
@@ -26,6 +34,7 @@ wss.on('connection', (ws, req) => {
 
     const game = games.get(query.gameCode.toUpperCase());
     ws.gameCode = game.gameCode;
+    gameCode = game.gameCode; // Used for clearing game after socket has been closed and no longer holds reference
 
     // Check if name is valid
     const added = game.addPlayer(ws);
@@ -47,6 +56,7 @@ wss.on('connection', (ws, req) => {
     let game = new Game();
     while (games.has(game.gameCode)) game = new Game();
     ws.gameCode = game.gameCode;
+    gameCode = game.gameCode; // Used for clearing game after socket has been closed and no longer holds reference
 
     game.addPlayer(ws);
     games.set(game.gameCode, game);
@@ -57,10 +67,11 @@ wss.on('connection', (ws, req) => {
     ws.close();
   }
 
-  ws.on('close', (ws) => {
-    // On socket close, check if all other players (sockets) in game are also close. If so, delete game
-    if (!games.has(ws.gameCode)) return;
-    const game = games.get(ws.gameCode);
+
+  ws.on('close', () => {
+    // On socket close, check if all other players (sockets) in game are also closed. If so, delete game
+    if (!games.has(gameCode)) return;
+    const game = games.get(gameCode);
 
     for (const player of game.players.values()) {
       if (player.readyState !== WebSocket.CLOSED) return;
@@ -102,6 +113,7 @@ wss.on('connection', (ws, req) => {
         if (!games.has(ws.gameCode)) break;
         const game = games.get(ws.gameCode);
         if (ws.uuid !== game.host.uuid) break;
+
         const updatedTeamOne = game.teamOne.slice();
         const updatedTeamTwo = game.teamTwo.slice();
         if (game.teamOne.includes(data.name)) {
@@ -117,6 +129,18 @@ wss.on('connection', (ws, req) => {
         // Send updated teams to all other players
         for (const [playerName, player] of game.players) {
           if (playerName !== ws.name) player.send(JSON.stringify({ type: 'SET_TEAMS', teamOne: game.teamOne, teamTwo: game.teamTwo }));
+        }
+        break;
+      }
+      case 'RANDOMIZE_TEAMS': {
+        if (!games.has(ws.gameCode)) break;
+        const game = games.get(ws.gameCode);
+        if (ws.uuid !== game.host.uuid) break;
+        game.randomizeTeams();
+
+        // Send updated teams to all players
+        for (const player of game.players.values()) {
+          player.send(JSON.stringify({ type: 'SET_TEAMS', teamOne: game.teamOne, teamTwo: game.teamTwo }));
         }
         break;
       }
@@ -179,8 +203,35 @@ wss.on('connection', (ws, req) => {
         activePlayer.send(JSON.stringify({ type: 'SET_CURRENT_WORD', currentWord: game.currentWord }));
         break;
       }
+      case 'RESTART_GAME': {
+        if (!games.has(ws.gameCode)) break;
+        const game = games.get(ws.gameCode);
+        if (ws.uuid !== game.host.uuid) break;
+        game.restart();
+
+        // Send updated game state to all players
+        for (const player of game.players.values()) {
+          player.send(JSON.stringify({ type: 'SET_GAME_STAGE', gameStage: game.gameStage }));
+        }
+        break;
+      }
       default:
         break;
     }
   });
+});
+
+const interval = setInterval(() => {
+  wss.clients.forEach((ws) => {
+    if (ws.isAlive === false) {
+      ws.terminate();
+    } else {
+      ws.isAlive = false;
+      ws.ping(() => {});
+    }
+  });
+}, 3000);
+
+wss.on('close', () => {
+  clearInterval(interval);
 });

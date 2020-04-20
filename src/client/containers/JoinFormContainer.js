@@ -27,7 +27,7 @@ function JoinFormContainer() {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (input.name && input.gameCode) {
-      const url = `ws://localhost:8080/join?name=${input.name}&gameCode=${input.gameCode}`;
+      const url = `ws://192.168.1.21:8080/join?name=${input.name}&gameCode=${input.gameCode}`; // TODO: update for deployment
       dispatch({ type: CONNECT_SOCKET, url });
     }
   };

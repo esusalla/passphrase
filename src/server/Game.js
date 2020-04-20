@@ -6,8 +6,10 @@ class Game {
     this.gameCode = crypto.randomBytes(20).toString('hex').substring(0, 4).toUpperCase();
 
     // Rules
-    this.minPlayers = 2;
-    this.scoreGoal = 3;
+    this.timerMin = 52000;
+    this.timerMax = 60000;
+    this.minPlayers = 4;
+    this.scoreGoal = 7;
     this.category = 'EVERYTHING';
     this.skipsAllowed = 2;
 
@@ -22,7 +24,6 @@ class Game {
     this.timer = 0;
     this.teamOneScore = 0;
     this.teamTwoScore = 0;
-    this.currentSkips = 0;
     this.wordList = [];
     this.currentWord = '';
     this.lastWord = '';
@@ -73,11 +74,17 @@ class Game {
     return true;
   }
 
+  randomizeTeams() {
+    const newOrder = shuffle(this.teamOne.concat(this.teamTwo));
+    this.teamOne = newOrder.slice(0, Math.ceil(newOrder.length / 2));
+    this.teamTwo = newOrder.slice(Math.ceil(newOrder.length / 2));
+  }
+
   startRound() {
     this.gameStage = 'roundActive';
     this.currentWord = this.wordList.shift();
     this.seenWords.add(this.currentWord);
-    this.timer = randomFromInterval(10000, 15000);
+    this.timer = randomFromInterval(this.timerMin, this.timerMax);
     setTimeout(() => this.endRound(), this.timer);
   }
 
@@ -130,11 +137,11 @@ class Game {
     }
   }
 
-  reset() {
+  restart() {
+    this.gameStage = 'setup';
     this.timer = 0;
     this.teamOneScore = 0;
     this.teamTwoScore = 0;
-    this.currentSkips = 0;
     this.lastWord = '';
   }
 }

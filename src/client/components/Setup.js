@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 function Setup(props) {
-  const { category, categoryList, gameCode, handleCategoryChange, handlePlayerTeamChange, handleSkipsAllowedChange, handleStartGame, skipsAllowed, skipList, teamOne, teamTwo } = props;
+  const { category, categoryList, gameCode, handleCategoryChange, handlePlayerTeamChange, handleRandomizeTeams, handleSkipsAllowedChange, handleStartGame, skipsAllowed, skipList, teamOne, teamTwo } = props;
   const categoryOptions = categoryList.map((category) => <option key={category} value={category}>{category}</option>);
   const skipOptions = skipList.map((skip) => <option key={skip} value={skip}>{skip}</option>);
   const teamOneList = teamOne.map((playerName) => <li key={playerName} onClick={handlePlayerTeamChange}>{playerName}</li>);
@@ -26,6 +26,7 @@ function Setup(props) {
       </label>
       <h5>Team One</h5>
       <ul>{teamOneList}</ul>
+      <button onClick={handleRandomizeTeams} type="submit">Randomize Teams</button>
       <h5>Team Two</h5>
       <ul>{teamTwoList}</ul>
       <button onClick={handleStartGame} type="submit">Start Game</button>
@@ -38,6 +39,7 @@ Setup.propTypes = {
   categoryList: PropTypes.arrayOf(PropTypes.string),
   gameCode: PropTypes.string,
   handleCategoryChange: PropTypes.func,
+  handleRandomizeTeams: PropTypes.func,
   handlePlayerTeamChange: PropTypes.func,
   handleSkipsAllowedChange: PropTypes.func,
   handleStartGame: PropTypes.func,

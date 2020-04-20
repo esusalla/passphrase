@@ -6,6 +6,7 @@ export const SET_CATEGORY = 'SET_CATEGORY';
 export const SET_SKIPS_ALLOWED = 'SET_SKIPS_ALLOWED';
 export const SET_TEAMS = 'SET_TEAMS';
 export const CHANGE_PLAYER_TEAM = 'CHANGE_PLAYER_TEAM';
+export const RANDOMIZE_TEAMS = 'RANDOMIZE_TEAMS';
 export const START_GAME = 'START_GAME';
 export const SET_PLAYER_ORDER = 'SET_PLAYER_ORDER';
 export const SET_GAME_STAGE = 'SET_GAME_STAGE';
@@ -16,6 +17,7 @@ export const SET_SKIPS_AVAILABLE = 'SET_SKIPS_AVAILABLE';
 export const USE_SKIP = 'USE_SKIP';
 export const PASS_TO_NEXT_PLAYER = 'PASS_TO_NEXT_PLAYER';
 export const SET_SCORES = 'SET_SCORES';
+export const RESTART_GAME = 'RESTART_GAME';
 
 export function setConnected(connected) {
   return { type: SET_CONNECTED, connected };
@@ -47,6 +49,10 @@ export function setTeams(teamOne, teamTwo) {
 
 export function changePlayerTeam(name) {
   return { type: CHANGE_PLAYER_TEAM, name };
+}
+
+export function randomizeTeams() {
+  return { type: RANDOMIZE_TEAMS };
 }
 
 export function startGame() {
@@ -87,6 +93,10 @@ export function passToNextPlayer() {
 
 export function setScores(teamOneScore, teamTwoScore) {
   return { type: SET_SCORES, teamOneScore, teamTwoScore };
+}
+
+export function restartGame() {
+  return { type: RESTART_GAME };
 }
 
 // Socket middleware actions

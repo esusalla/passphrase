@@ -107,10 +107,12 @@ function socket() {
       case actions.SET_CATEGORY:
       case actions.SET_SKIPS_ALLOWED:
       case actions.CHANGE_PLAYER_TEAM:
+      case actions.RANDOMIZE_TEAMS:
       case actions.START_GAME:
       case actions.START_ROUND:
       case actions.USE_SKIP:
       case actions.PASS_TO_NEXT_PLAYER:
+      case actions.RESTART_GAME:
         socket.send(JSON.stringify(action));
         next(action);
         break;
