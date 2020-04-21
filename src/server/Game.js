@@ -8,7 +8,7 @@ class Game {
     // Rules
     this.timerMin = 52000;
     this.timerMax = 60000;
-    this.minPlayers = 4;
+    this.minPlayers = 2;
     this.scoreGoal = 7;
     this.category = 'EVERYTHING';
     this.skipsAllowed = 2;
@@ -44,6 +44,18 @@ class Game {
     if (this.teamOne.length <= this.teamTwo.length) this.teamOne.push(player.name);
     else this.teamTwo.push(player.name);
     return true;
+  }
+
+  reconnectPlayer(player, oldUuid) {
+    // Confirm that player with this name and uuid exists in game
+    if (this.players.has(player.name) && this.players.get(player.name).uuid === oldUuid) {
+      player.uuid = oldUuid;
+      player.skipsAvailable = this.players.get(player.name).skipsAvailable;
+      if (this.host.uuid === oldUuid) this.host = player; // Replace host if it is host reconnecting
+      this.players.set(player.name, player);
+      return true;
+    }
+    return false;
   }
 
   startGame() {

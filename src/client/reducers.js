@@ -8,7 +8,7 @@ const initialState = {
   hostName: '',
   category: 'EVERYTHING',
   skipsAllowed: '2',
-  skipsAvailable: '2',
+  skipsAvailable: '',
   teamOne: [],
   teamTwo: [],
   playerOrder: [],

@@ -103,6 +103,7 @@ export function restartGame() {
 export const CONNECT_SOCKET = 'CONNECT_SOCKET';
 export const INIT_AFTER_JOIN = 'INIT_AFTER_JOIN'; // Received from server after joining game
 export const INIT_AFTER_CREATE = 'INIT_AFTER_CREATE'; // Received from server after creating game
+export const INIT_AFTER_RECONNECT = 'INIT_AFTER_RECONNECT'; // Received from server after player reconnects to game after being disconnected
 export const INIT_AFTER_START = 'INIT_AFTER_START'; // Received from server after game is started
 export const UPDATE_AFTER_ROUND_START = 'UPDATE_AFTER_ROUND_START'; // Received from server after start of round
 export const UPDATE_AFTER_PASS = 'UPDATE_AFTER_PASS'; // Received from server after phrase is guessed and player passes to next

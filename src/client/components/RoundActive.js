@@ -14,10 +14,16 @@ function RoundActive(props) {
     </div>
   );
 
+  const turnMsg = () => {
+    if (playerOrder[1] === name) return <p>You're up next. Be ready!</p>;
+    if (playerOrder.indexOf(name) % 2 === 0) return <p>Your team is up. You should GUESS!</p>;
+    return <p>The other team is up. You should NOT GUESS!</p>;
+  };
+
   const otherPlayerInfo = (
     <div>
       {lastWord ? <p>{`Last word: ${lastWord}`}</p> : null}
-      {playerOrder[1] === name ? <p>You're up next. Be ready!</p> : null}
+      {turnMsg()}
       <ul>{playerOrderList}</ul>
     </div>
   );

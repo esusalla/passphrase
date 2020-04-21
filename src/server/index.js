@@ -20,7 +20,7 @@ wss.on('connection', (ws, req) => {
 
   ws.isAlive = true;
   ws.on('pong', heartbeat);
-  ws.uuid = uuidv4();
+  ws.uuid = query.uuid || uuidv4();
   ws.name = query.name.length > nameLengthLimit ? query.name.substring(0, nameLengthLimit).toUpperCase() : query.name.toUpperCase();
   let gameCode = ''; // Used for clearing game after socket has been closed and no longer holds reference
 
@@ -37,19 +37,27 @@ wss.on('connection', (ws, req) => {
     gameCode = game.gameCode; // Used for clearing game after socket has been closed and no longer holds reference
 
     // Check if name is valid
-    const added = game.addPlayer(ws);
-    if (!added) {
+    if (!game.addPlayer(ws)) {
+      // Check if player was previously connected and attempt to reconnect if so
+      if (!game.reconnectPlayer(ws, query.uuid)) {
       // send player already exists error
-      ws.close();
-      return;
-    }
+        ws.close();
+        return;
+      }
 
-    // Send current game state to newly joined player
-    ws.send(JSON.stringify({ type: 'INIT_AFTER_JOIN', name: ws.name, gameCode: game.gameCode, hostName: game.host.name, category: game.category, skipsAllowed: game.skipsAllowed, teamOne: game.teamOne, teamTwo: game.teamTwo }));
+      // Send full game state to reconnected player
+      const lastWord = game.gameStage === 'roundActive' ? game.lastWord : '';
+      const currentWord = game.playerOrder[0] === ws.name ? game.currentWord : '';
+      const { skipsAvailable } = game.players.get(ws.name);
+      ws.send(JSON.stringify({ type: 'INIT_AFTER_RECONNECT', name: ws.name, gameCode: game.gameCode, gameStage: game.gameStage, hostName: game.host.name, category: game.category, skipsAvailable, skipsAllowed: game.skipsAllowed, teamOne: game.teamOne, teamTwo: game.teamTwo, playerOrder: game.playerOrder, teamOneScore: game.teamOneScore, teamTwoScore: game.teamTwoScore, lastWord, currentWord }));
+    } else {
+      // Send current game state to newly joined player
+      ws.send(JSON.stringify({ type: 'INIT_AFTER_JOIN', name: ws.name, gameCode: game.gameCode, hostName: game.host.name, category: game.category, skipsAllowed: game.skipsAllowed, teamOne: game.teamOne, teamTwo: game.teamTwo, uuid: ws.uuid }));
 
-    // Send updated teams to all other players
-    for (const [playerName, player] of game.players) {
-      if (playerName !== ws.name) player.send(JSON.stringify({ type: 'SET_TEAMS', teamOne: game.teamOne, teamTwo: game.teamTwo }));
+      // Send updated teams to all other players
+      for (const [playerName, player] of game.players) {
+        if (playerName !== ws.name) player.send(JSON.stringify({ type: 'SET_TEAMS', teamOne: game.teamOne, teamTwo: game.teamTwo }));
+      }
     }
   } else if (pathname === '/create') {
     // Iterate to make sure there are no duplicate game codes
@@ -62,7 +70,7 @@ wss.on('connection', (ws, req) => {
     games.set(game.gameCode, game);
 
     // Send initial game state to new host
-    ws.send(JSON.stringify({ type: 'INIT_AFTER_CREATE', name: ws.name, gameCode: game.gameCode }));
+    ws.send(JSON.stringify({ type: 'INIT_AFTER_CREATE', name: ws.name, gameCode: game.gameCode, uuid: ws.uuid }));
   } else {
     ws.close();
   }

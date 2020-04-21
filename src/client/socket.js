@@ -21,6 +21,9 @@ function socket() {
     const data = JSON.parse(msg.data);
     switch (data.type) {
       case actions.INIT_AFTER_JOIN:
+        sessionStorage.setItem('uuid', data.uuid);
+        sessionStorage.setItem('name', data.name);
+        sessionStorage.setItem('gameCode', data.gameCode);
         batch(() => {
           store.dispatch(actions.setName(data.name));
           store.dispatch(actions.setHostName(data.hostName));
@@ -31,6 +34,9 @@ function socket() {
         });
         break;
       case actions.INIT_AFTER_CREATE:
+        sessionStorage.setItem('uuid', data.uuid);
+        sessionStorage.setItem('name', data.name);
+        sessionStorage.setItem('gameCode', data.gameCode);
         batch(() => {
           store.dispatch(actions.setName(data.name));
           store.dispatch(actions.setHostName(data.name));
@@ -43,6 +49,22 @@ function socket() {
           store.dispatch(actions.setSkipsAllowed(data.skipsAllowed));
           store.dispatch(actions.setPlayerOrder(data.playerOrder));
           store.dispatch(actions.setGameStage(data.gameStage));
+        });
+        break;
+      case actions.INIT_AFTER_RECONNECT:
+        batch(() => {
+          store.dispatch(actions.setName(data.name));
+          store.dispatch(actions.setHostName(data.hostName));
+          store.dispatch(actions.setCategory(data.category));
+          store.dispatch(actions.setSkipsAllowed(data.skipsAllowed));
+          store.dispatch(actions.setTeams(data.teamOne, data.teamTwo));
+          store.dispatch(actions.setPlayerOrder(data.playerOrder));
+          store.dispatch(actions.setScores(data.teamOneScore, data.teamTwoScore));
+          store.dispatch(actions.setLastWord(data.lastWord));
+          store.dispatch(actions.setCurrentWord(data.currentWord));
+          store.dispatch(actions.setGameCode(data.gameCode));
+          store.dispatch(actions.setGameStage(data.gameStage));
+          store.dispatch(actions.setSkipsAvailable(data.skipsAvailable));
         });
         break;
       case actions.SET_CATEGORY:
@@ -103,7 +125,7 @@ function socket() {
         socket.onmessage = onMessage(store);
         break;
       }
-      // Messages passed back to server from client
+      // Messages passed to server from client
       case actions.SET_CATEGORY:
       case actions.SET_SKIPS_ALLOWED:
       case actions.CHANGE_PLAYER_TEAM:
