@@ -29,5 +29,6 @@ rules: {
   object-curly-newline: 0,
   react/jsx-filename-extension: 0,
   react/no-render-return-value: 0,
+  react/no-unescaped-entities: 0,
   react/require-default-props: 0,
 }

@@ -8,7 +8,7 @@ import Setup from '../components/Setup';
 function SetupContainer() {
   const connected = useSelector((state) => state.connected);
   const category = useSelector((state) => state.category);
-  const categoryList = ['EVERYTHING', 'SCIENCE', 'PEOPLE', 'HISTORY']; // update after creating in postgres
+  const categoryList = ['VARIETY', 'ANIMALS', 'FOOD', 'PEOPLE', 'HOLIDAYS', 'TRAVEL'];
   const gameCode = useSelector((state) => state.gameCode);
   const gameStage = useSelector((state) => state.gameStage);
   const hostName = useSelector((state) => state.hostName);

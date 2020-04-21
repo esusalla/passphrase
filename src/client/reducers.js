@@ -6,7 +6,7 @@ const initialState = {
   name: '',
   gameCode: '',
   hostName: '',
-  category: 'EVERYTHING',
+  category: 'VARIETY',
   skipsAllowed: '2',
   skipsAvailable: '',
   teamOne: [],

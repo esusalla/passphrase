@@ -4,7 +4,7 @@ import WebSocket from 'ws';
 
 import Game from './Game';
 
-const categoryList = ['EVERYTHING', 'SCIENCE', 'PEOPLE', 'HISTORY']; // get from postgres
+const categoryList = ['VARIETY', 'ANIMALS', 'FOOD', 'PEOPLE', 'SEASONAL', 'TRAVEL'];
 const skipList = ['0', '1', '2', '3', 'Unlimited'];
 const nameLengthLimit = 16;
 const games = new Map();
