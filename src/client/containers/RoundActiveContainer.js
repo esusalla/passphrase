@@ -18,10 +18,12 @@ function RoundActiveContainer() {
   const teamTwoScore = useSelector((state) => state.teamTwoScore);
   const dispatch = useDispatch();
   const [audio, setAudio] = useState(new Audio());
+  const [audioTimeout, setAudioTimeout] = useState(null);
 
   useEffect(() => {
     if (!connected) {
       audio.pause();
+      clearTimeout(audioTimeout);
     }
     if (gameStage === 'roundStart') {
       audio.pause();
@@ -34,20 +36,22 @@ function RoundActiveContainer() {
       tickTock.loop = true;
       tickTock.play();
       setAudio(tickTock);
-      setTimeout(() => {
+      let timeout = setTimeout(() => {
         tickTock.pause();
         tickTock = new Audio('./audio/tick-tock-2.mp3');
         tickTock.loop = true;
         tickTock.play();
         setAudio(tickTock);
-        setTimeout(() => {
+        timeout = setTimeout(() => {
           tickTock.pause();
           tickTock = new Audio('./audio/tick-tock-3.mp3');
           tickTock.loop = true;
           tickTock.play();
           setAudio(tickTock);
         }, 15000);
+        setAudioTimeout(timeout);
       }, 29000);
+      setAudioTimeout(timeout);
     }
   }, [connected, gameStage]);
 
