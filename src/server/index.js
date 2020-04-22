@@ -1,18 +1,25 @@
+import compression from 'compression';
+import express from 'express';
+import helmet from 'helmet';
+import http from 'http';
+import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import url from 'url';
 import WebSocket from 'ws';
 
+import { categoryList, skipList, nameLengthLimit } from '../shared/constants';
 import Game from './Game';
 
-const categoryList = ['VARIETY', 'ANIMALS', 'FOOD', 'PEOPLE', 'SEASONAL', 'TRAVEL'];
-const skipList = ['0', '1', '2', '3', 'Unlimited'];
-const nameLengthLimit = 16;
 const games = new Map();
-const wss = new WebSocket.Server({ port: 8080 });
 
-function heartbeat() {
-  this.isAlive = true;
-}
+const app = express();
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
+
+app.use(compression());
+app.use(helmet());
+app.use(express.static(path.join(__dirname, 'public')));
+app.get('*', (req, res) => res.redirect('/'));
 
 wss.on('connection', (ws, req) => {
   const parsedUrl = url.parse(req.url, true);
@@ -40,7 +47,7 @@ wss.on('connection', (ws, req) => {
     if (!game.addPlayer(ws)) {
       // Check if player was previously connected and attempt to reconnect if so
       if (!game.reconnectPlayer(ws, query.uuid)) {
-      // send player already exists error
+        // send player already exists error
         ws.close();
         return;
       }
@@ -235,11 +242,17 @@ const interval = setInterval(() => {
       ws.terminate();
     } else {
       ws.isAlive = false;
-      ws.ping(() => {});
+      ws.ping(() => { });
     }
   });
-}, 3000);
+}, 30000);
+
+function heartbeat() {
+  this.isAlive = true;
+}
 
 wss.on('close', () => {
   clearInterval(interval);
 });
+
+server.listen(8080);

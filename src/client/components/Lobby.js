@@ -3,8 +3,8 @@ import React from 'react';
 
 function Lobby(props) {
   const { category, gameCode, hostName, skipsAllowed, teamOne, teamTwo } = props;
-  const teamOneList = teamOne.map((playerName) => <li key={playerName}>{playerName}</li>);
-  const teamTwoList = teamTwo.map((playerName) => <li key={playerName}>{playerName}</li>);
+  const teamOneList = teamOne.map(playerName => <li key={playerName}>{playerName}</li>);
+  const teamTwoList = teamTwo.map(playerName => <li key={playerName}>{playerName}</li>);
 
   return (
     <div>
@@ -21,11 +21,11 @@ function Lobby(props) {
 }
 
 Lobby.propTypes = {
-  category: PropTypes.string,
-  gameCode: PropTypes.string,
-  hostName: PropTypes.string,
-  skipsAllowed: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  teamOne: PropTypes.arrayOf(PropTypes.string),
-  teamTwo: PropTypes.arrayOf(PropTypes.string),
+  category: PropTypes.string.isRequired,
+  gameCode: PropTypes.string.isRequired,
+  hostName: PropTypes.string.isRequired,
+  skipsAllowed: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  teamOne: PropTypes.arrayOf(PropTypes.string).isRequired,
+  teamTwo: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 export default Lobby;

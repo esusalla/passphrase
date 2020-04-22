@@ -2,11 +2,31 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 function Setup(props) {
-  const { category, categoryList, gameCode, handleCategoryChange, handlePlayerTeamChange, handleRandomizeTeams, handleSkipsAllowedChange, handleStartGame, skipsAllowed, skipList, teamOne, teamTwo } = props;
-  const categoryOptions = categoryList.map((category) => <option key={category} value={category}>{category}</option>);
-  const skipOptions = skipList.map((skip) => <option key={skip} value={skip}>{skip}</option>);
-  const teamOneList = teamOne.map((playerName) => <li key={playerName} onClick={handlePlayerTeamChange}>{playerName}</li>);
-  const teamTwoList = teamTwo.map((playerName) => <li key={playerName} onClick={handlePlayerTeamChange}>{playerName}</li>);
+  const {
+    category,
+    categoryList,
+    gameCode,
+    handleCategoryChange,
+    handlePlayerTeamChange,
+    handleRandomizeTeams,
+    handleSkipsAllowedChange,
+    handleStartGame,
+    skipsAllowed,
+    skipList,
+    teamOne,
+    teamTwo } = props;
+  const categoryOptions = categoryList.map(category => <option key={category} value={category}>{category}</option>);
+  const skipOptions = skipList.map(skip => <option key={skip} value={skip}>{skip}</option>);
+  const teamOneList = teamOne.map(playerName => (
+    <li key={playerName} value={playerName}>
+      {playerName}<button type="button" onClick={handlePlayerTeamChange}>{' ==>'}</button>
+    </li>
+  ));
+  const teamTwoList = teamTwo.map(playerName => (
+    <li key={playerName} value={playerName}>
+      <button type="button" onClick={handlePlayerTeamChange}>{'<== '}</button>{playerName}
+    </li>
+  ));
 
   return (
     <div>
@@ -26,10 +46,10 @@ function Setup(props) {
       </label>
       <h5>Team One</h5>
       <ul>{teamOneList}</ul>
-      <button onClick={handleRandomizeTeams} type="submit">Randomize Teams</button>
+      <button onClick={handleRandomizeTeams} type="submit">RANDOMIZE TEAMS</button>
       <h5>Team Two</h5>
       <ul>{teamTwoList}</ul>
-      <button onClick={handleStartGame} type="submit">Start Game</button>
+      <button onClick={handleStartGame} type="submit">START GAME</button>
     </div>
   );
 }
@@ -48,4 +68,5 @@ Setup.propTypes = {
   teamOne: PropTypes.arrayOf(PropTypes.string),
   teamTwo: PropTypes.arrayOf(PropTypes.string),
 };
+
 export default Setup;

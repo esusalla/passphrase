@@ -1,32 +1,41 @@
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
+import { nameLengthLimit } from '../../shared/constants';
 import CreateForm from '../components/CreateForm';
 import { CONNECT_SOCKET } from '../actions';
 
-const nameLengthLimit = 16;
+function CreateFormContainer(props) {
+  const { handleViewChange } = props;
 
-function CreateFormContainer() {
-  const connected = useSelector((state) => state.connected);
-  const gameCode = useSelector((state) => state.gameCode);
+  // Local state
   const [name, setName] = useState('');
+
+  // Global state changes
   const dispatch = useDispatch();
-
-  const handleChange = (event) => {
-    if (event.target.value.length <= nameLengthLimit) setName(event.target.value);
-  };
-
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault();
     if (name) {
-      const url = `ws://192.168.1.21:8080/create?name=${name}`; // TODO: update for deployment
+      const url = `ws://192.168.1.21:8080/create?name=${name}`; // TODO: update URL for deployment
       dispatch({ type: CONNECT_SOCKET, url });
     }
   };
 
-  if (connected && gameCode) return <Redirect to="/setup" />;
-  return <CreateForm handleChange={handleChange} handleSubmit={handleSubmit} name={name} />;
+  // Local state changes
+  const handleInputChange = event => { if (event.target.value.length <= nameLengthLimit) setName(event.target.value); };
+
+  return (
+    <CreateForm
+      handleInputChange={handleInputChange}
+      handleSubmit={handleSubmit}
+      handleViewChange={handleViewChange}
+      name={name} />
+  );
 }
+
+CreateFormContainer.propTypes = {
+  handleViewChange: PropTypes.func.isRequired,
+};
 
 export default CreateFormContainer;

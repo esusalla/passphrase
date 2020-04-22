@@ -1,23 +1,17 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
 import Lobby from '../components/Lobby';
 
 function LobbyContainer() {
-  const connected = useSelector((state) => state.connected);
-  const gameCode = useSelector((state) => state.gameCode);
-  const gameStage = useSelector((state) => state.gameStage);
-  const hostName = useSelector((state) => state.hostName);
-  const name = useSelector((state) => state.name);
-  const category = useSelector((state) => state.category);
-  const skipsAllowed = useSelector((state) => state.skipsAllowed);
-  const teamOne = useSelector((state) => state.teamOne);
-  const teamTwo = useSelector((state) => state.teamTwo);
+  // Global state
+  const category = useSelector(state => state.category);
+  const gameCode = useSelector(state => state.gameCode);
+  const hostName = useSelector(state => state.hostName);
+  const skipsAllowed = useSelector(state => state.skipsAllowed);
+  const teamOne = useSelector(state => state.teamOne);
+  const teamTwo = useSelector(state => state.teamTwo);
 
-  if (!connected) return <Redirect to="/" />;
-  if (gameStage === 'roundStart') return <Redirect to="/round-start" />;
-  if (name === hostName) return <Redirect to="/setup" />;
   return (
     <Lobby
       category={category}

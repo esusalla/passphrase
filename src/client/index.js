@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { applyMiddleware, compose, createStore } from 'redux';
 
 import socket from './socket';
-import App from './components/App';
+import App from './containers/App';
 
 import reducers from './reducers';
 

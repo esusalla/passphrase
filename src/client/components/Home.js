@@ -1,14 +1,19 @@
+import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router-dom';
 
-function Home() {
+function Home(props) {
+  const { handleViewChange } = props;
   return (
     <div>
-      <Link to="/join">Join Game</Link>
+      <button onClick={handleViewChange} type="button" value="join">JOIN GAME</button>
       <br />
-      <Link to="/create">Create Game</Link>
+      <button onClick={handleViewChange} type="button" value="create">CREATE GAME</button>
     </div>
   );
+}
+
+Home.propTypes = {
+  handleViewChange: PropTypes.func.isRequired,
 }
 
 export default Home;

@@ -1,29 +1,27 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
+import { categoryList, minPlayers, skipList } from '../../shared/constants';
 import * as actions from '../actions';
 import Setup from '../components/Setup';
 
 function SetupContainer() {
-  const connected = useSelector((state) => state.connected);
-  const category = useSelector((state) => state.category);
-  const categoryList = ['VARIETY', 'ANIMALS', 'FOOD', 'PEOPLE', 'HOLIDAYS', 'TRAVEL'];
-  const gameCode = useSelector((state) => state.gameCode);
-  const gameStage = useSelector((state) => state.gameStage);
-  const hostName = useSelector((state) => state.hostName);
-  const minPlayers = 2;
-  const name = useSelector((state) => state.name);
-  const skipsAllowed = useSelector((state) => state.skipsAllowed);
-  const skipList = ['0', '1', '2', '3', 'Unlimited'];
-  const teamOne = useSelector((state) => state.teamOne);
-  const teamTwo = useSelector((state) => state.teamTwo);
-  const dispatch = useDispatch();
+  // Global state
+  const category = useSelector(state => state.category);
+  const gameCode = useSelector(state => state.gameCode);
+  const skipsAllowed = useSelector(state => state.skipsAllowed);
+  const teamOne = useSelector(state => state.teamOne);
+  const teamTwo = useSelector(state => state.teamTwo);
 
-  const handleCategoryChange = (event) => dispatch(actions.setCategory(event.target.value));
-  const handlePlayerTeamChange = (event) => dispatch(actions.changePlayerTeam(event.target.textContent));
+  // Global state changes
+  const dispatch = useDispatch();
+  const handleCategoryChange = event => dispatch(actions.setCategory(event.target.value));
+  const handlePlayerTeamChange = event => {
+    const parent = event.target.parentElement;
+    dispatch(actions.changePlayerTeam(parent.getAttribute('value')));
+  };
   const handleRandomizeTeams = () => dispatch(actions.randomizeTeams());
-  const handleSkipsAllowedChange = (event) => dispatch(actions.setSkipsAllowed(event.target.value));
+  const handleSkipsAllowedChange = event => dispatch(actions.setSkipsAllowed(event.target.value));
   const handleStartGame = () => {
     const teamOneLen = teamOne.length;
     const teamTwoLen = teamTwo.length;
@@ -43,9 +41,6 @@ function SetupContainer() {
     dispatch(actions.startGame());
   };
 
-  if (!connected) return <Redirect to="/" />;
-  if (gameStage === 'roundStart') return <Redirect to="/round-start" />;
-  if (name !== hostName) return <Redirect to="/lobby" />;
   return (
     <Setup
       category={category}

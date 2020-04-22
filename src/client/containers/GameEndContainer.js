@@ -1,33 +1,31 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
 import * as actions from '../actions';
 import GameEnd from '../components/GameEnd';
 
 function GameEndContainer() {
-  const connected = useSelector((state) => state.connected);
-  const gameStage = useSelector((state) => state.gameStage);
-  const hostName = useSelector((state) => state.hostName);
-  const name = useSelector((state) => state.name);
-  const teamOneScore = useSelector((state) => state.teamOneScore);
-  const teamTwoScore = useSelector((state) => state.teamTwoScore);
+  // Global state
+  const audio = useSelector(state => state.audio);
+  const audioTimeout = useSelector(state => state.audioTimeout);
+  const gameStage = useSelector(state => state.gameStage);
+  const hostName = useSelector(state => state.hostName);
+  const name = useSelector(state => state.name);
+  const teamOneScore = useSelector(state => state.teamOneScore);
+  const teamTwoScore = useSelector(state => state.teamTwoScore);
+
+  // Global state changes
   const dispatch = useDispatch();
+  const handleRestartGame = () => dispatch(actions.restartGame());
 
   useEffect(() => {
-    if (gameStage === 'end') {
-      const audio = new Audio('./audio/game-end.mp3');
-      audio.play();
-    }
+    // Play trumpets on round end transition to game end
+    if (audio) audio.pause();
+    clearTimeout(audioTimeout);
+    const trumpets = new Audio('./audio/trumpets.mp3');
+    trumpets.play();
   }, [gameStage]);
 
-  const handleRestartGame = () => {
-    dispatch(actions.restartGame());
-  };
-
-  if (!connected) return <Redirect to="/" />;
-  if (gameStage === 'setup' && name === hostName) return <Redirect to="/setup" />;
-  if (gameStage === 'setup' && name !== hostName) return <Redirect to="/lobby" />;
   return (
     <GameEnd
       handleRestartGame={handleRestartGame}

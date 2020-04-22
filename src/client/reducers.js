@@ -17,6 +17,8 @@ const initialState = {
   currentWord: '',
   lastWord: '',
   skipsUsed: 0,
+  audio: null,
+  audioTimeout: null
 };
 
 function reducers(state = initialState, action) {
@@ -28,8 +30,7 @@ function reducers(state = initialState, action) {
     case actions.SET_GAME_CODE:
       return { ...state, gameCode: action.gameCode };
     case actions.SET_HOST_NAME:
-      return { ...state, hostName: action.hostName };
-    case actions.SET_CATEGORY:
+      return { ...state, hostName: action.hostName }; case actions.SET_CATEGORY:
       return { ...state, category: action.category };
     case actions.SET_SKIPS_ALLOWED:
       return { ...state, skipsAllowed: action.skipsAllowed, skipsAvailable: action.skipsAllowed };
@@ -67,6 +68,10 @@ function reducers(state = initialState, action) {
       return { ...state, teamOneScore: action.teamOneScore, teamTwoScore: action.teamTwoScore };
     case actions.RESTART_GAME:
       return { ...state, teamOneScore: 0, teamTwoScore: 0, lastWord: '' };
+    case actions.SET_AUDIO:
+      return { ...state, audio: action.audio };
+    case actions.SET_AUDIO_TIMEOUT:
+      return { ...state, audioTimeout: action.audioTimeout };
     default:
       return state;
   }
