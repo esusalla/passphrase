@@ -18,8 +18,6 @@ export const USE_SKIP = 'USE_SKIP';
 export const PASS_TO_NEXT_PLAYER = 'PASS_TO_NEXT_PLAYER';
 export const SET_SCORES = 'SET_SCORES';
 export const RESTART_GAME = 'RESTART_GAME';
-export const SET_AUDIO = 'SET_AUDIO';
-export const SET_AUDIO_TIMEOUT = 'SET_AUDIO_TIMEOUT';
 
 export function setConnected(connected) {
   return { type: SET_CONNECTED, connected };
@@ -99,14 +97,6 @@ export function setScores(teamOneScore, teamTwoScore) {
 
 export function restartGame() {
   return { type: RESTART_GAME };
-}
-
-export function setAudio(audio) {
-  return { type: SET_AUDIO, audio };
-}
-
-export function setAudioTimeout(audioTimeout) {
-  return { type: SET_AUDIO_TIMEOUT, audioTimeout };
 }
 
 // Socket middleware actions

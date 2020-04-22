@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import { categoryList, minPlayers, skipList } from '../../shared/constants';
 import * as actions from '../actions';
@@ -8,7 +9,9 @@ import Setup from '../components/Setup';
 function SetupContainer() {
   // Global state
   const category = useSelector(state => state.category);
+  const connected = useSelector(state => state.connected);
   const gameCode = useSelector(state => state.gameCode);
+  const gameStage = useSelector(state => state.gameStage);
   const skipsAllowed = useSelector(state => state.skipsAllowed);
   const teamOne = useSelector(state => state.teamOne);
   const teamTwo = useSelector(state => state.teamTwo);
@@ -41,6 +44,8 @@ function SetupContainer() {
     dispatch(actions.startGame());
   };
 
+  if (!connected) return <Redirect to="/" />;
+  if (gameStage === 'roundStart') return <Redirect to="/round-start" />;
   return (
     <Setup
       category={category}

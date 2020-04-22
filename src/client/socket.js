@@ -11,7 +11,7 @@ function socket() {
 
   const onClose = (store) => () => {
     batch(() => {
-      store.dispatch(actions.setGameStage('setup'));
+      store.dispatch(actions.setGameStage('init'));
       store.dispatch(actions.setTeams([], []));
       store.dispatch(actions.setConnected(false));
     });
@@ -31,6 +31,7 @@ function socket() {
           store.dispatch(actions.setSkipsAllowed(data.skipsAllowed));
           store.dispatch(actions.setTeams(data.teamOne, data.teamTwo));
           store.dispatch(actions.setGameCode(data.gameCode));
+          store.dispatch(actions.setGameStage(data.gameStage));
         });
         break;
       case actions.INIT_AFTER_CREATE:
@@ -42,6 +43,7 @@ function socket() {
           store.dispatch(actions.setHostName(data.name));
           store.dispatch(actions.setTeams([data.name], []));
           store.dispatch(actions.setGameCode(data.gameCode));
+          store.dispatch(actions.setGameStage(data.gameStage));
         });
         break;
       case actions.INIT_AFTER_START:

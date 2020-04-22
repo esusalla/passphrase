@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import * as actions from '../actions';
 import GameEnd from '../components/GameEnd';
 
 function GameEndContainer() {
   // Global state
-  const audio = useSelector(state => state.audio);
-  const audioTimeout = useSelector(state => state.audioTimeout);
+  const connected = useSelector(state => state.connected);
   const gameStage = useSelector(state => state.gameStage);
   const hostName = useSelector(state => state.hostName);
   const name = useSelector(state => state.name);
@@ -18,14 +18,8 @@ function GameEndContainer() {
   const dispatch = useDispatch();
   const handleRestartGame = () => dispatch(actions.restartGame());
 
-  useEffect(() => {
-    // Play trumpets on round end transition to game end
-    if (audio) audio.pause();
-    clearTimeout(audioTimeout);
-    const trumpets = new Audio('./audio/trumpets.mp3');
-    trumpets.play();
-  }, [gameStage]);
-
+  if (!connected) return <Redirect to="/" />;
+  if (gameStage === 'setup') return <Redirect to="/setup" />;
   return (
     <GameEnd
       handleRestartGame={handleRestartGame}

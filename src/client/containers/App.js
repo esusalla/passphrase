@@ -1,8 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 
+import Home from '../components/Home';
+import CreateFormContainer from './CreateFormContainer';
 import GameEndContainer from './GameEndContainer';
-import HomeContainer from './HomeContainer';
+import JoinFormContainer from './JoinFormContainer';
 import LobbyContainer from './LobbyContainer';
 import RoundActiveContainer from './RoundActiveContainer';
 import RoundStartContainer from './RoundStartContainer';
@@ -10,20 +13,23 @@ import SetupContainer from './SetupContainer';
 
 function App() {
   // Global state
-  const connected = useSelector(state => state.connected);
-  const gameStage = useSelector(state => state.gameStage);
   const hostName = useSelector(state => state.hostName);
   const name = useSelector(state => state.name);
 
-  if (!connected) return <HomeContainer />;
-  if (gameStage === 'setup') {
-    // Separate views depending on whether player is host or not
-    if (name !== hostName) return <LobbyContainer />;
-    return <SetupContainer />;
-  }
-  if (gameStage === 'roundStart') return <RoundStartContainer />;
-  if (gameStage === 'roundActive') return <RoundActiveContainer />;
-  if (gameStage === 'gameEnd') return <GameEndContainer />;
+  // Conditionally renders setup container based on whether player is host or not
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Route path="/" exact component={Home} />
+        <Route path="/join" component={JoinFormContainer} />
+        <Route path="/create" component={CreateFormContainer} />
+        <Route path="/setup" component={name === hostName ? SetupContainer : LobbyContainer} />
+        <Route path="/round-start" component={RoundStartContainer} />
+        <Route path="/round-active" component={RoundActiveContainer} />
+        <Route path="/game-end" component={GameEndContainer} />
+      </Switch>
+    </BrowserRouter>
+  );
 }
 
 export default App;

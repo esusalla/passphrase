@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import * as actions from '../actions';
 import RoundStart from '../components/RoundStart';
 
 function RoundStartContainer() {
   // Global state
-  const audio = useSelector(state => state.audio);
-  const audioTimeout = useSelector(state => state.audioTimeout);
-  const name = useSelector(state => state.name);
+  const connected = useSelector(state => state.connected);
   const gameStage = useSelector(state => state.gameStage);
+  const name = useSelector(state => state.name);
   const playerOrder = useSelector(state => state.playerOrder);
   const teamOneScore = useSelector(state => state.teamOneScore);
   const teamTwoScore = useSelector(state => state.teamTwoScore);
@@ -18,17 +18,8 @@ function RoundStartContainer() {
   const dispatch = useDispatch();
   const handleStartRound = () => dispatch(actions.startRound());
 
-  useEffect(() => {
-    // Play buzz on round active transition back to round start except for first round
-    // Test if first round by checking if either team has scored
-    if (teamOneScore || teamTwoScore) {
-      if (audio) audio.pause();
-      clearTimeout(audioTimeout);
-      const buzz = new Audio('./audio/buzz.mp3');
-      buzz.play();
-    }
-  }, [gameStage]);
-
+  if (!connected) return <Redirect to="/" />;
+  if (gameStage === 'roundActive') return <Redirect to="/round-active" />;
   return (
     <RoundStart
       name={name}

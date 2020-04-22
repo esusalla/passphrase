@@ -1,7 +1,7 @@
 import * as actions from './actions';
 
 const initialState = {
-  gameStage: 'setup',
+  gameStage: 'init',
   connected: false,
   name: '',
   gameCode: '',
@@ -17,8 +17,6 @@ const initialState = {
   currentWord: '',
   lastWord: '',
   skipsUsed: 0,
-  audio: null,
-  audioTimeout: null
 };
 
 function reducers(state = initialState, action) {
@@ -68,10 +66,6 @@ function reducers(state = initialState, action) {
       return { ...state, teamOneScore: action.teamOneScore, teamTwoScore: action.teamTwoScore };
     case actions.RESTART_GAME:
       return { ...state, teamOneScore: 0, teamTwoScore: 0, lastWord: '' };
-    case actions.SET_AUDIO:
-      return { ...state, audio: action.audio };
-    case actions.SET_AUDIO_TIMEOUT:
-      return { ...state, audioTimeout: action.audioTimeout };
     default:
       return state;
   }

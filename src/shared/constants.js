@@ -1,4 +1,4 @@
-export const categoryList = ['VARIETY', 'ANIMALS', 'FOOD', 'PEOPLE', 'HOLIDAYS', 'TRAVEL'];
+export const categoryList = ['VARIETY', 'ANIMALS', 'FOOD', 'PEOPLE', 'SEASONAL', 'TRAVEL'];
 export const nameLengthLimit = 16;
 export const minPlayers = 2;
 export const skipList = ['0', '1', '2', '3', 'Unlimited'];

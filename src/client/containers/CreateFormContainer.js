@@ -1,13 +1,14 @@
-import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import { nameLengthLimit } from '../../shared/constants';
 import CreateForm from '../components/CreateForm';
 import { CONNECT_SOCKET } from '../actions';
 
-function CreateFormContainer(props) {
-  const { handleViewChange } = props;
+function CreateFormContainer() {
+  // Global state
+  const gameStage = useSelector(state => state.gameStage);
 
   // Local state
   const [name, setName] = useState('');
@@ -23,19 +24,15 @@ function CreateFormContainer(props) {
   };
 
   // Local state changes
-  const handleInputChange = event => { if (event.target.value.length <= nameLengthLimit) setName(event.target.value); };
+  const handleChange = event => { if (event.target.value.length <= nameLengthLimit) setName(event.target.value); };
 
+  if (gameStage === 'setup') return <Redirect to="/setup" />;
   return (
     <CreateForm
-      handleInputChange={handleInputChange}
+      handleChange={handleChange}
       handleSubmit={handleSubmit}
-      handleViewChange={handleViewChange}
       name={name} />
   );
 }
-
-CreateFormContainer.propTypes = {
-  handleViewChange: PropTypes.func.isRequired,
-};
 
 export default CreateFormContainer;
