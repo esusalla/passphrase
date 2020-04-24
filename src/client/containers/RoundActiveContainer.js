@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { batch, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import { passToNextPlayer, useSkip } from '../../shared/actions';
@@ -8,17 +8,16 @@ import RoundActive from '../components/RoundActive';
 
 function RoundActiveContainer() {
   // Global state
-  const connected = useSelector(state => state.connected);
-  const currentWord = useSelector(state => state.currentWord);
-  const elapsedRoundTime = useSelector(state => state.elapsedRoundTime);
-  const gameStage = useSelector(state => state.gameStage);
-  const lastWord = useSelector(state => state.lastWord);
-  const name = useSelector(state => state.name);
-  const playerOrder = useSelector(state => state.playerOrder);
-  const skipsAllowed = useSelector(state => state.skipsAllowed);
-  const skipsAvailable = useSelector(state => state.skipsAvailable);
-  const teamOneScore = useSelector(state => state.teamOneScore);
-  const teamTwoScore = useSelector(state => state.teamTwoScore);
+  const connected = useSelector((state) => state.connected);
+  const currentWord = useSelector((state) => state.currentWord);
+  const elapsedRoundTime = useSelector((state) => state.elapsedRoundTime);
+  const gameStage = useSelector((state) => state.gameStage);
+  const lastWord = useSelector((state) => state.lastWord);
+  const name = useSelector((state) => state.name);
+  const playerOrder = useSelector((state) => state.playerOrder);
+  const skipsAvailable = useSelector((state) => state.skipsAvailable);
+  const teamOneScore = useSelector((state) => state.teamOneScore);
+  const teamTwoScore = useSelector((state) => state.teamTwoScore);
 
   // Local state
   const [audio, setAudio] = useState(new Audio());
@@ -29,7 +28,7 @@ function RoundActiveContainer() {
   const handlePassToNextPlayer = () => dispatch(passToNextPlayer());
   const handleUseSkip = () => { if (skipsAvailable === 'Unlimited' || skipsAvailable > 0) dispatch(useSkip()); };
 
-  const loopAudio = audioFile => {
+  const loopAudio = (audioFile) => {
     const newAudio = new Audio(audioFile);
     newAudio.loop = true;
     newAudio.play();
@@ -40,7 +39,7 @@ function RoundActiveContainer() {
   const clearAudio = () => {
     if (audio) audio.pause();
     clearTimeout(audioTimeout);
-  }
+  };
 
   // Handle all audio effects
   useEffect(() => {

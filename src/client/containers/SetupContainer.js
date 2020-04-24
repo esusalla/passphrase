@@ -8,36 +8,36 @@ import Setup from '../components/Setup';
 
 function SetupContainer() {
   // Global state
-  const category = useSelector(state => state.category);
-  const connected = useSelector(state => state.connected);
-  const gameCode = useSelector(state => state.gameCode);
-  const gameStage = useSelector(state => state.gameStage);
-  const skipsAllowed = useSelector(state => state.skipsAllowed);
-  const teamOne = useSelector(state => state.teamOne);
-  const teamTwo = useSelector(state => state.teamTwo);
+  const category = useSelector((state) => state.category);
+  const connected = useSelector((state) => state.connected);
+  const gameCode = useSelector((state) => state.gameCode);
+  const gameStage = useSelector((state) => state.gameStage);
+  const skipsAllowed = useSelector((state) => state.skipsAllowed);
+  const teamOne = useSelector((state) => state.teamOne);
+  const teamTwo = useSelector((state) => state.teamTwo);
 
   // Global state changes
   const dispatch = useDispatch();
-  const handleCategoryChange = event => dispatch(setCategory(event.target.value));
-  const handlePlayerTeamChange = event => {
+  const handleCategoryChange = (event) => dispatch(setCategory(event.target.value));
+  const handlePlayerTeamChange = (event) => {
     const parent = event.target.parentElement;
     dispatch(changePlayerTeam(parent.getAttribute('value')));
   };
   const handleRandomizeTeams = () => dispatch(randomizeTeams());
-  const handleSkipsAllowedChange = event => dispatch(setSkipsAllowed(event.target.value));
+  const handleSkipsAllowedChange = (event) => dispatch(setSkipsAllowed(event.target.value));
   const handleStartGame = () => {
     const teamOneLen = teamOne.length;
     const teamTwoLen = teamTwo.length;
 
     // Check if minimum number of players is met
     if (teamOneLen + teamTwoLen < minPlayers) {
-      console.log(`Must have ${minPlayers} or more players`); // TODO: add error msg support
+      // TODO: add error msg support
       return;
     }
 
     // Check if teams have same number of players
     if (teamOneLen !== teamTwoLen) {
-      console.log('Teams must have the same number of players'); // TODO: add error msg support
+      // TODO: add error msg support
       return;
     }
 

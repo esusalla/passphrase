@@ -8,7 +8,7 @@ import JoinForm from '../components/JoinForm';
 
 function JoinFormContainer() {
   // Global state
-  const gameStage = useSelector(state => state.gameStage);
+  const gameStage = useSelector((state) => state.gameStage);
 
   // Local State
   const [input, setInput] = useReducer(
@@ -21,17 +21,18 @@ function JoinFormContainer() {
 
   // Global state changes
   const dispatch = useDispatch();
-  const handleSubmit = event => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     if (input.name && input.gameCode) {
       const uuid = sessionStorage.getItem('uuid');
-      const url = `ws://192.168.1.21:8080/join?name=${input.name}&gameCode=${input.gameCode}&uuid=${uuid}`; // TODO: update URL for deployment
+      // TODO: update URL for deployment
+      const url = `ws://192.168.1.21:8080/join?name=${input.name}&gameCode=${input.gameCode}&uuid=${uuid}`;
       dispatch(connectSocket(url));
     }
   };
 
   // Local state changes
-  const handleChange = event => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
     // Update input unless it's name input and exceeds allowed length
     if (!(name === 'name' && value.length > nameLengthLimit)) setInput({ [name]: value });

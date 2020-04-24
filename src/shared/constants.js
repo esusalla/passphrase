@@ -2,11 +2,11 @@ export const categoryList = ['VARIETY', 'ANIMALS', 'FOOD', 'PEOPLE', 'SEASONAL',
 export const defaultCategory = 'VARIETY';
 export const defaultSkipsAllowed = '2';
 export const gameStages = {
-    INIT: 'INIT',
-    SETUP: 'SETUP',
-    ROUND_START: 'ROUND_START',
-    ROUND_ACTIVE: 'ROUND_ACTIVE',
-    GAME_END: 'GAME_END',
+  INIT: 'INIT',
+  SETUP: 'SETUP',
+  ROUND_START: 'ROUND_START',
+  ROUND_ACTIVE: 'ROUND_ACTIVE',
+  GAME_END: 'GAME_END',
 };
 export const nameLengthLimit = 16;
 export const minPlayers = 2;

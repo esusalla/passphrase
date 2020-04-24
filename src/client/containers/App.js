@@ -13,8 +13,8 @@ import SetupContainer from './SetupContainer';
 
 function App() {
   // Global state
-  const hostName = useSelector(state => state.hostName);
-  const name = useSelector(state => state.name);
+  const hostName = useSelector((state) => state.hostName);
+  const name = useSelector((state) => state.name);
 
   // Conditionally renders setup container based on whether player is host or not
   return (

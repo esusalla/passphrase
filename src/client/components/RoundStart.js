@@ -3,7 +3,7 @@ import React from 'react';
 
 function RoundStart(props) {
   const { name, handleStartRound, playerOrder, teamOneScore, teamTwoScore } = props;
-  const playerOrderList = playerOrder.map(playerName => <li key={playerName}>{playerName}</li>);
+  const playerOrderList = playerOrder.map((playerName) => <li key={playerName}>{playerName}</li>);
 
   return (
     <div>

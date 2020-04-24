@@ -1,5 +1,11 @@
-
-import { defaultCategory, defaultSkipsAllowed, gameStages, minPlayers, roundTimerMax, roundTimerMin, scoreGoal } from '../shared/constants';
+import {
+  defaultCategory,
+  defaultSkipsAllowed,
+  gameStages,
+  minPlayers,
+  roundTimerMax,
+  roundTimerMin,
+  scoreGoal } from '../shared/constants';
 import { genPlayerOrder, genRandomString, randomFromInterval, shuffle } from './utils';
 import wordLists from './wordLists';
 
@@ -42,6 +48,7 @@ class Game {
     this.players.set(player.name, player);
     if (this.teamOne.length <= this.teamTwo.length) this.teamOne.push(player.name);
     else this.teamTwo.push(player.name);
+    return {};
   }
 
   reconnectPlayer(player) {
@@ -141,8 +148,8 @@ class Game {
   skipWord() {
     const activePlayer = this.getActivePlayer();
     if (activePlayer.skipsAvailable === 'Unlimited' || activePlayer.skipsAvailable > 0) {
-      // If skips is a number (i.e., not 'Unlimited'), reduce by one
-      if (!isNaN(activePlayer.skipsAvailable)) activePlayer.skipsAvailable--;
+      // If skips are not unlimited, reduce by one
+      if (activePlayer.skipsAvailable !== 'Unlimited') activePlayer.skipsAvailable -= 1;
       this.currentWord = this.getNextWord();
       return true;
     }
@@ -150,11 +157,14 @@ class Game {
   }
 
   endRound() {
-    if (this.teamOne.includes(this.playerOrder[0])) this.teamTwoScore++;
-    else this.teamOneScore++;
+    if (this.teamOne.includes(this.playerOrder[0])) this.teamTwoScore += 1;
+    else this.teamOneScore += 1;
 
     // End game if either team has reached the score goal
-    if (this.teamOneScore === this.scoreGoal || this.teamTwoScore === this.scoreGoal) return this.endGame();
+    if (this.teamOneScore === this.scoreGoal || this.teamTwoScore === this.scoreGoal) {
+      this.endGame();
+      return;
+    }
 
     this.gameStage = gameStages.ROUND_START;
     this.playerOrder.push(this.playerOrder.shift());

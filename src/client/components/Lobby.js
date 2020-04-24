@@ -3,8 +3,8 @@ import React from 'react';
 
 function Lobby(props) {
   const { category, gameCode, hostName, skipsAllowed, teamOne, teamTwo } = props;
-  const teamOneList = teamOne.map(playerName => <li key={playerName}>{playerName}</li>);
-  const teamTwoList = teamTwo.map(playerName => <li key={playerName}>{playerName}</li>);
+  const teamOneList = teamOne.map((playerName) => <li key={playerName}>{playerName}</li>);
+  const teamTwoList = teamTwo.map((playerName) => <li key={playerName}>{playerName}</li>);
 
   return (
     <div>

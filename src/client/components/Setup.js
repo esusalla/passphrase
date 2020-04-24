@@ -15,14 +15,14 @@ function Setup(props) {
     skipList,
     teamOne,
     teamTwo } = props;
-  const categoryOptions = categoryList.map(category => <option key={category} value={category}>{category}</option>);
-  const skipOptions = skipList.map(skip => <option key={skip} value={skip}>{skip}</option>);
-  const teamOneList = teamOne.map(playerName => (
+  const categoryOptions = categoryList.map((cat) => <option key={cat} value={cat}>{cat}</option>);
+  const skipOptions = skipList.map((skip) => <option key={skip} value={skip}>{skip}</option>);
+  const teamOneList = teamOne.map((playerName) => (
     <li key={playerName} value={playerName}>
       {playerName}<button type="button" onClick={handlePlayerTeamChange}>{' ==>'}</button>
     </li>
   ));
-  const teamTwoList = teamTwo.map(playerName => (
+  const teamTwoList = teamTwo.map((playerName) => (
     <li key={playerName} value={playerName}>
       <button type="button" onClick={handlePlayerTeamChange}>{'<== '}</button>{playerName}
     </li>
@@ -55,18 +55,18 @@ function Setup(props) {
 }
 
 Setup.propTypes = {
-  category: PropTypes.string,
-  categoryList: PropTypes.arrayOf(PropTypes.string),
-  gameCode: PropTypes.string,
-  handleCategoryChange: PropTypes.func,
-  handleRandomizeTeams: PropTypes.func,
-  handlePlayerTeamChange: PropTypes.func,
-  handleSkipsAllowedChange: PropTypes.func,
-  handleStartGame: PropTypes.func,
-  skipsAllowed: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  skipList: PropTypes.arrayOf(PropTypes.string),
-  teamOne: PropTypes.arrayOf(PropTypes.string),
-  teamTwo: PropTypes.arrayOf(PropTypes.string),
+  category: PropTypes.string.isRequired,
+  categoryList: PropTypes.arrayOf(PropTypes.string).isRequired,
+  gameCode: PropTypes.string.isRequired,
+  handleCategoryChange: PropTypes.func.isRequired,
+  handleRandomizeTeams: PropTypes.func.isRequired,
+  handlePlayerTeamChange: PropTypes.func.isRequired,
+  handleSkipsAllowedChange: PropTypes.func.isRequired,
+  handleStartGame: PropTypes.func.isRequired,
+  skipsAllowed: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  skipList: PropTypes.arrayOf(PropTypes.string).isRequired,
+  teamOne: PropTypes.arrayOf(PropTypes.string).isRequired,
+  teamTwo: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default Setup;

@@ -7,14 +7,14 @@ import Lobby from '../components/Lobby';
 
 function LobbyContainer() {
   // Global state
-  const category = useSelector(state => state.category);
-  const connected = useSelector(state => state.connected);
-  const gameCode = useSelector(state => state.gameCode);
-  const gameStage = useSelector(state => state.gameStage);
-  const hostName = useSelector(state => state.hostName);
-  const skipsAllowed = useSelector(state => state.skipsAllowed);
-  const teamOne = useSelector(state => state.teamOne);
-  const teamTwo = useSelector(state => state.teamTwo);
+  const category = useSelector((state) => state.category);
+  const connected = useSelector((state) => state.connected);
+  const gameCode = useSelector((state) => state.gameCode);
+  const gameStage = useSelector((state) => state.gameStage);
+  const hostName = useSelector((state) => state.hostName);
+  const skipsAllowed = useSelector((state) => state.skipsAllowed);
+  const teamOne = useSelector((state) => state.teamOne);
+  const teamTwo = useSelector((state) => state.teamTwo);
 
   if (!connected) return <Redirect to="/" />;
   if (gameStage === gameStages.ROUND_START) return <Redirect to="/round-start" />;

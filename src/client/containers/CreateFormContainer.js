@@ -8,14 +8,14 @@ import CreateForm from '../components/CreateForm';
 
 function CreateFormContainer() {
   // Global state
-  const gameStage = useSelector(state => state.gameStage);
+  const gameStage = useSelector((state) => state.gameStage);
 
   // Local state
   const [name, setName] = useState('');
 
   // Global state changes
   const dispatch = useDispatch();
-  const handleSubmit = event => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     if (name) {
       const url = `ws://192.168.1.21:8080/create?name=${name}`; // TODO: update URL for deployment
@@ -24,14 +24,15 @@ function CreateFormContainer() {
   };
 
   // Local state changes
-  const handleChange = event => { if (event.target.value.length <= nameLengthLimit) setName(event.target.value); };
+  const handleChange = (event) => { if (event.target.value.length <= nameLengthLimit) setName(event.target.value); };
 
   if (gameStage === gameStages.SETUP) return <Redirect to="/setup" />;
   return (
     <CreateForm
       handleChange={handleChange}
       handleSubmit={handleSubmit}
-      name={name} />
+      name={name}
+    />
   );
 }
 

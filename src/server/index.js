@@ -33,11 +33,14 @@ wss.on('connection', (player, req) => {
   // New players can only connect by creating or joining game
   if (pathname === '/create') player.gameCode = handlers.createGame(player, games);
   else if (pathname === '/join') handlers.joinGame(player, games);
-  else return player.close();
+  else {
+    player.close();
+    return;
+  }
 
   // Used with ping from socket server to detect disconnected sockets
   player.connected = true;
-  player.on('pong', () => player.connected = true);
+  player.on('pong', () => { player.connected = true; });
 
   // Handle all client messages
   player.on('message', (msg) => {
@@ -93,7 +96,7 @@ wss.on('connection', (player, req) => {
 
 // Intermittently ping all clients to detect any disconnected sockets
 const interval = setInterval(() => {
-  wss.clients.forEach(player => {
+  wss.clients.forEach((player) => {
     if (!player.connected) player.terminate();
     else {
       player.connected = false;
