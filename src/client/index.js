@@ -6,10 +6,10 @@ import { applyMiddleware, compose, createStore } from 'redux';
 import socket from './socket';
 import App from './containers/App';
 
-import reducers from './reducers';
+import reducer from './reducer';
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(reducers, composeEnhancers(applyMiddleware(socket)));
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // TODO: remove devtools for deployment
+const store = createStore(reducer, composeEnhancers(applyMiddleware(socket)));
 
 const run = () => ReactDOM.render(
   <Provider store={store}>

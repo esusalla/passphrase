@@ -2,7 +2,8 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import * as actions from '../actions';
+import { startRound } from '../../shared/actions';
+import { gameStages } from '../../shared/constants';
 import RoundStart from '../components/RoundStart';
 
 function RoundStartContainer() {
@@ -16,10 +17,10 @@ function RoundStartContainer() {
 
   // Global state changes
   const dispatch = useDispatch();
-  const handleStartRound = () => dispatch(actions.startRound());
+  const handleStartRound = () => dispatch(startRound());
 
   if (!connected) return <Redirect to="/" />;
-  if (gameStage === 'roundActive') return <Redirect to="/round-active" />;
+  if (gameStage === gameStages.ROUND_ACTIVE) return <Redirect to="/round-active" />;
   return (
     <RoundStart
       name={name}

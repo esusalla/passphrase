@@ -2,7 +2,8 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import * as actions from '../actions';
+import { restartGame } from '../../shared/actions';
+import { gameStages } from '../../shared/constants';
 import GameEnd from '../components/GameEnd';
 
 function GameEndContainer() {
@@ -16,10 +17,10 @@ function GameEndContainer() {
 
   // Global state changes
   const dispatch = useDispatch();
-  const handleRestartGame = () => dispatch(actions.restartGame());
+  const handleRestartGame = () => dispatch(restartGame());
 
   if (!connected) return <Redirect to="/" />;
-  if (gameStage === 'setup') return <Redirect to="/setup" />;
+  if (gameStage === gameStages.SETUP) return <Redirect to="/setup" />;
   return (
     <GameEnd
       handleRestartGame={handleRestartGame}

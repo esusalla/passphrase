@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
+import { gameStages } from '../../shared/constants';
 import Lobby from '../components/Lobby';
 
 function LobbyContainer() {
@@ -16,7 +17,7 @@ function LobbyContainer() {
   const teamTwo = useSelector(state => state.teamTwo);
 
   if (!connected) return <Redirect to="/" />;
-  if (gameStage === 'roundStart') return <Redirect to="/round-start" />;
+  if (gameStage === gameStages.ROUND_START) return <Redirect to="/round-start" />;
   return (
     <Lobby
       category={category}

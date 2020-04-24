@@ -2,8 +2,8 @@ import React, { useReducer } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import { nameLengthLimit } from '../../shared/constants';
-import { CONNECT_SOCKET } from '../actions';
+import { connectSocket } from '../../shared/actions';
+import { gameStages, nameLengthLimit } from '../../shared/constants';
 import JoinForm from '../components/JoinForm';
 
 function JoinFormContainer() {
@@ -26,23 +26,23 @@ function JoinFormContainer() {
     if (input.name && input.gameCode) {
       const uuid = sessionStorage.getItem('uuid');
       const url = `ws://192.168.1.21:8080/join?name=${input.name}&gameCode=${input.gameCode}&uuid=${uuid}`; // TODO: update URL for deployment
-      dispatch({ type: CONNECT_SOCKET, url });
+      dispatch(connectSocket(url));
     }
   };
 
   // Local state changes
   const handleChange = event => {
     const { name, value } = event.target;
-    // Update input unless it's name input and exceeding allowed length
+    // Update input unless it's name input and exceeds allowed length
     if (!(name === 'name' && value.length > nameLengthLimit)) setInput({ [name]: value });
   };
 
   // Multiple redirects for handling a player who disconnects during a game and then reconnects
   switch (gameStage) {
-    case 'setup': return <Redirect to="/setup" />;
-    case 'roundStart': return <Redirect to="/round-start" />;
-    case 'roundActive': return <Redirect to="/round-active" />;
-    case 'gameEnd': return <Redirect to="/game-end" />;
+    case gameStages.SETUP: return <Redirect to="/setup" />;
+    case gameStages.ROUND_START: return <Redirect to="/round-start" />;
+    case gameStages.ROUND_ACTIVE: return <Redirect to="/round-active" />;
+    case gameStages.GAME_END: return <Redirect to="/game-end" />;
     default:
       return (
         <JoinForm

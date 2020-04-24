@@ -7,8 +7,9 @@ import { v4 as uuidv4 } from 'uuid';
 import url from 'url';
 import WebSocket from 'ws';
 
-import { categoryList, skipList, nameLengthLimit } from '../shared/constants';
-import Game from './Game';
+import * as actions from '../shared/actions';
+import * as handlers from './handlers';
+import { limitName } from './utils';
 
 const games = new Map();
 
@@ -21,235 +22,85 @@ app.use(helmet());
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('*', (req, res) => res.redirect('/'));
 
-wss.on('connection', (ws, req) => {
+wss.on('connection', (player, req) => {
   const parsedUrl = url.parse(req.url, true);
   const { pathname, query } = parsedUrl;
 
-  ws.isAlive = true;
-  ws.on('pong', heartbeat);
-  ws.uuid = query.uuid || uuidv4();
-  ws.name = query.name.length > nameLengthLimit ? query.name.substring(0, nameLengthLimit).toUpperCase() : query.name.toUpperCase();
-  let gameCode = ''; // Used for clearing game after socket has been closed and no longer holds reference
+  player.gameCode = (query.gameCode || '').toUpperCase();
+  player.name = limitName(query.name);
+  player.uuid = query.uuid || uuidv4();
 
-  if (pathname === '/join') {
-    // Check if game code is valid
-    if (!games.has(query.gameCode.toUpperCase())) {
-      // send game doesn't exist error
-      ws.close();
-      return;
-    }
+  // New players can only connect by creating or joining game
+  if (pathname === '/create') player.gameCode = handlers.createGame(player, games);
+  else if (pathname === '/join') handlers.joinGame(player, games);
+  else return player.close();
 
-    const game = games.get(query.gameCode.toUpperCase());
-    ws.gameCode = game.gameCode;
-    gameCode = game.gameCode; // Used for clearing game after socket has been closed and no longer holds reference
+  // Used with ping from socket server to detect disconnected sockets
+  player.connected = true;
+  player.on('pong', () => player.connected = true);
 
-    // Check if name is valid
-    if (!game.addPlayer(ws)) {
-      // Check if player was previously connected and attempt to reconnect if so
-      if (!game.reconnectPlayer(ws, query.uuid)) {
-        // send player already exists error
-        ws.close();
-        return;
-      }
-
-      // Send full game state to reconnected player
-      const lastWord = game.gameStage === 'roundActive' ? game.lastWord : '';
-      const currentWord = game.playerOrder[0] === ws.name ? game.currentWord : '';
-      const { skipsAvailable } = game.players.get(ws.name);
-      ws.send(JSON.stringify({ type: 'INIT_AFTER_RECONNECT', name: ws.name, gameCode: game.gameCode, gameStage: game.gameStage, hostName: game.host.name, category: game.category, skipsAvailable, skipsAllowed: game.skipsAllowed, teamOne: game.teamOne, teamTwo: game.teamTwo, playerOrder: game.playerOrder, teamOneScore: game.teamOneScore, teamTwoScore: game.teamTwoScore, lastWord, currentWord }));
-    } else {
-      // Send current game state to newly joined player
-      ws.send(JSON.stringify({ type: 'INIT_AFTER_JOIN', name: ws.name, gameCode: game.gameCode, gameStage: game.gameStage, hostName: game.host.name, category: game.category, skipsAllowed: game.skipsAllowed, teamOne: game.teamOne, teamTwo: game.teamTwo, uuid: ws.uuid }));
-
-      // Send updated teams to all other players
-      for (const [playerName, player] of game.players) {
-        if (playerName !== ws.name) player.send(JSON.stringify({ type: 'SET_TEAMS', teamOne: game.teamOne, teamTwo: game.teamTwo }));
-      }
-    }
-  } else if (pathname === '/create') {
-    // Iterate to make sure there are no duplicate game codes
-    let game = new Game();
-    while (games.has(game.gameCode)) game = new Game();
-    ws.gameCode = game.gameCode;
-    gameCode = game.gameCode; // Used for clearing game after socket has been closed and no longer holds reference
-
-    game.addPlayer(ws);
-    games.set(game.gameCode, game);
-
-    // Send initial game state to new host
-    ws.send(JSON.stringify({ type: 'INIT_AFTER_CREATE', name: ws.name, gameCode: game.gameCode, uuid: ws.uuid, gameStage: game.gameStage }));
-  } else {
-    ws.close();
-  }
-
-
-  ws.on('close', () => {
-    // On socket close, check if all other players (sockets) in game are also closed. If so, delete game
-    if (!games.has(gameCode)) return;
-    const game = games.get(gameCode);
-
-    for (const player of game.players.values()) {
-      if (player.readyState !== WebSocket.CLOSED) return;
-    }
-    games.delete(game.gameCode);
-  });
-
-  ws.on('message', (msg) => {
-    // Handle client messages
+  // Handle all client messages
+  player.on('message', (msg) => {
     const data = JSON.parse(msg);
+    if (!games.has(player.gameCode)) return;
+    const game = games.get(player.gameCode);
+
     switch (data.type) {
-      case 'SET_CATEGORY': {
-        if (!categoryList.includes(data.category)) break;
-        if (!games.has(ws.gameCode)) break;
-        const game = games.get(ws.gameCode);
-        if (ws.uuid !== game.host.uuid) break;
-        game.category = data.category;
-
-        // Send updated category to all other players
-        for (const [playerName, player] of game.players) {
-          if (playerName !== ws.name) player.send(JSON.stringify({ type: 'SET_CATEGORY', category: data.category }));
-        }
+      case actions.SET_CATEGORY:
+        handlers.setCategory(player, game, data);
         break;
-      }
-      case 'SET_SKIPS_ALLOWED': {
-        if (!skipList.includes(data.skipsAllowed)) break;
-        if (!games.has(ws.gameCode)) break;
-        const game = games.get(ws.gameCode);
-        if (ws.uuid !== game.host.uuid) break;
-        game.skipsAllowed = data.skipsAllowed;
-
-        // Send updated skips allowed to all other players
-        for (const [playerName, player] of game.players) {
-          if (playerName !== ws.name) player.send(JSON.stringify({ type: 'SET_SKIPS_ALLOWED', skipsAllowed: data.skipsAllowed }));
-        }
+      case actions.SET_SKIPS_ALLOWED:
+        handlers.setSkipsAllowed(player, game, data);
         break;
-      }
-      case 'CHANGE_PLAYER_TEAM': {
-        if (!games.has(ws.gameCode)) break;
-        const game = games.get(ws.gameCode);
-        if (ws.uuid !== game.host.uuid) break;
-
-        const updatedTeamOne = game.teamOne.slice();
-        const updatedTeamTwo = game.teamTwo.slice();
-        if (game.teamOne.includes(data.name)) {
-          updatedTeamOne.splice(updatedTeamOne.indexOf(data.name), 1);
-          updatedTeamTwo.push(data.name);
-        } else if (game.teamTwo.includes(data.name)) {
-          updatedTeamTwo.splice(updatedTeamTwo.indexOf(data.name), 1);
-          updatedTeamOne.push(data.name);
-        }
-        game.teamOne = updatedTeamOne;
-        game.teamTwo = updatedTeamTwo;
-
-        // Send updated teams to all other players
-        for (const [playerName, player] of game.players) {
-          if (playerName !== ws.name) player.send(JSON.stringify({ type: 'SET_TEAMS', teamOne: game.teamOne, teamTwo: game.teamTwo }));
-        }
+      case actions.CHANGE_PLAYER_TEAM:
+        handlers.changePlayerTeam(player, game, data);
         break;
-      }
-      case 'RANDOMIZE_TEAMS': {
-        if (!games.has(ws.gameCode)) break;
-        const game = games.get(ws.gameCode);
-        if (ws.uuid !== game.host.uuid) break;
-        game.randomizeTeams();
-
-        // Send updated teams to all players
-        for (const player of game.players.values()) {
-          player.send(JSON.stringify({ type: 'SET_TEAMS', teamOne: game.teamOne, teamTwo: game.teamTwo }));
-        }
+      case actions.RANDOMIZE_TEAMS:
+        handlers.randomizeTeams(player, game);
         break;
-      }
-      case 'START_GAME': {
-        if (!games.has(ws.gameCode)) break;
-        const game = games.get(ws.gameCode);
-        if (ws.uuid !== game.host.uuid) break;
-        if (!game.startGame()) break;
-
-        // Send updated game stage and player order to all players
-        for (const player of game.players.values()) {
-          player.send(JSON.stringify({ type: 'INIT_AFTER_START', gameStage: game.gameStage, playerOrder: game.playerOrder, skipsAllowed: game.skipsAllowed }));
-        }
+      case actions.START_GAME:
+        handlers.startGame(player, game);
         break;
-      }
-      case 'START_ROUND': {
-        if (!games.has(ws.gameCode)) break;
-        const game = games.get(ws.gameCode);
-        if (ws.uuid !== game.getActivePlayer().uuid) break;
-        const player = game.getActivePlayer();
-        game.startRound();
-
-        // Clear last word from last round and Send updated game stage to all players
-        for (const player of game.players.values()) {
-          player.send(JSON.stringify({ type: 'UPDATE_AFTER_ROUND_START', gameStage: game.gameStage, lastWord: '' }));
-        }
-
-        // Send new word to active player
-        player.send(JSON.stringify({ type: 'SET_CURRENT_WORD', currentWord: game.currentWord }));
+      case actions.START_ROUND:
+        handlers.startRound(player, game);
         break;
-      }
-      case 'USE_SKIP': {
-        if (!games.has(ws.gameCode)) break;
-        const game = games.get(ws.gameCode);
-        const activePlayer = game.getActivePlayer();
-        if (ws.uuid !== activePlayer.uuid) break;
-        if (activePlayer.skipsAvailable === 'Unlimited' || activePlayer.skipsAvailable > 0) {
-          if (!isNaN(activePlayer.skipsAvailable)) activePlayer.skipsAvailable--;
-          game.skipWord();
-
-          // Send new word to active player
-          activePlayer.send(JSON.stringify({ type: 'SET_CURRENT_WORD', currentWord: game.currentWord }));
-        }
+      case actions.USE_SKIP:
+        handlers.useSkip(player, game);
         break;
-      }
-      case 'PASS_TO_NEXT_PLAYER': {
-        if (!games.has(ws.gameCode)) break;
-        const game = games.get(ws.gameCode);
-        let activePlayer = game.getActivePlayer();
-        if (ws.uuid !== activePlayer.uuid) break;
-        game.passToNextPlayer();
-
-        // Send updated player order to all players
-        for (const player of game.players.values()) {
-          player.send(JSON.stringify({ type: 'UPDATE_AFTER_PASS', playerOrder: game.playerOrder, lastWord: game.lastWord }));
-        }
-
-        // Send new word to new active player
-        activePlayer = game.getActivePlayer();
-        activePlayer.send(JSON.stringify({ type: 'SET_CURRENT_WORD', currentWord: game.currentWord }));
+      case actions.PASS_TO_NEXT_PLAYER:
+        handlers.passToNextPlayer(player, game);
         break;
-      }
-      case 'RESTART_GAME': {
-        if (!games.has(ws.gameCode)) break;
-        const game = games.get(ws.gameCode);
-        if (ws.uuid !== game.host.uuid) break;
-        game.restart();
-
-        // Send updated game state to all players
-        for (const player of game.players.values()) {
-          player.send(JSON.stringify({ type: 'SET_GAME_STAGE', gameStage: game.gameStage }));
-        }
+      case actions.RESTART_GAME:
+        handlers.restartGame(player, game);
         break;
-      }
       default:
         break;
     }
   });
+
+  // On socket close, check if all other players in game are disconnected and delete game if so
+  player.on('close', () => {
+    if (!games.has(player.gameCode)) return;
+    const game = games.get(player.gameCode);
+
+    for (const ws of game.players.values()) {
+      if (ws.readyState !== WebSocket.CLOSED) return;
+    }
+
+    games.delete(game.gameCode);
+  });
 });
 
+// Intermittently ping all clients to detect any disconnected sockets
 const interval = setInterval(() => {
-  wss.clients.forEach((ws) => {
-    if (ws.isAlive === false) {
-      ws.terminate();
-    } else {
-      ws.isAlive = false;
-      ws.ping(() => { });
+  wss.clients.forEach(player => {
+    if (!player.connected) player.terminate();
+    else {
+      player.connected = false;
+      player.ping(() => { });
     }
   });
 }, 30000);
-
-function heartbeat() {
-  this.isAlive = true;
-}
 
 wss.on('close', () => {
   clearInterval(interval);

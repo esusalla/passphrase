@@ -2,8 +2,8 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import { categoryList, minPlayers, skipList } from '../../shared/constants';
-import * as actions from '../actions';
+import { changePlayerTeam, randomizeTeams, setCategory, setSkipsAllowed, startGame } from '../../shared/actions';
+import { categoryList, gameStages, minPlayers, skipList } from '../../shared/constants';
 import Setup from '../components/Setup';
 
 function SetupContainer() {
@@ -18,34 +18,34 @@ function SetupContainer() {
 
   // Global state changes
   const dispatch = useDispatch();
-  const handleCategoryChange = event => dispatch(actions.setCategory(event.target.value));
+  const handleCategoryChange = event => dispatch(setCategory(event.target.value));
   const handlePlayerTeamChange = event => {
     const parent = event.target.parentElement;
-    dispatch(actions.changePlayerTeam(parent.getAttribute('value')));
+    dispatch(changePlayerTeam(parent.getAttribute('value')));
   };
-  const handleRandomizeTeams = () => dispatch(actions.randomizeTeams());
-  const handleSkipsAllowedChange = event => dispatch(actions.setSkipsAllowed(event.target.value));
+  const handleRandomizeTeams = () => dispatch(randomizeTeams());
+  const handleSkipsAllowedChange = event => dispatch(setSkipsAllowed(event.target.value));
   const handleStartGame = () => {
     const teamOneLen = teamOne.length;
     const teamTwoLen = teamTwo.length;
 
     // Check if minimum number of players is met
     if (teamOneLen + teamTwoLen < minPlayers) {
-      console.log(`Must have ${minPlayers} or more players`);
+      console.log(`Must have ${minPlayers} or more players`); // TODO: add error msg support
       return;
     }
 
     // Check if teams have same number of players
     if (teamOneLen !== teamTwoLen) {
-      console.log('Teams must have the same number of players');
+      console.log('Teams must have the same number of players'); // TODO: add error msg support
       return;
     }
 
-    dispatch(actions.startGame());
+    dispatch(startGame());
   };
 
   if (!connected) return <Redirect to="/" />;
-  if (gameStage === 'roundStart') return <Redirect to="/round-start" />;
+  if (gameStage === gameStages.ROUND_START) return <Redirect to="/round-start" />;
   return (
     <Setup
       category={category}
