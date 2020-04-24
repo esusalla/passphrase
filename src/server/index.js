@@ -20,6 +20,7 @@ const wss = new WebSocket.Server({ server });
 app.use(compression());
 app.use(helmet());
 app.use(express.static(path.join(__dirname, 'public')));
+app.get(['/create', '/join'], (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 app.get('*', (req, res) => res.redirect('/'));
 
 wss.on('connection', (player, req) => {

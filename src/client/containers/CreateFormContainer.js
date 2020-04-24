@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import { connectSocket } from '../../shared/actions';
-import { gameStages, nameLengthLimit } from '../../shared/constants';
+import { baseUrl, gameStages, nameLengthLimit } from '../../shared/constants';
 import CreateForm from '../components/CreateForm';
 
 function CreateFormContainer() {
@@ -18,7 +18,7 @@ function CreateFormContainer() {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (name) {
-      const url = `ws://192.168.1.21:8080/create?name=${name}`; // TODO: update URL for deployment
+      const url = `ws://${baseUrl}/create?name=${name}`;
       dispatch(connectSocket(url));
     }
   };

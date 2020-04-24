@@ -1,3 +1,4 @@
+export const baseUrl = '192.168.1.21:8080';
 export const categoryList = ['VARIETY', 'ANIMALS', 'FOOD', 'PEOPLE', 'SEASONAL', 'TRAVEL'];
 export const defaultCategory = 'VARIETY';
 export const defaultSkipsAllowed = '2';

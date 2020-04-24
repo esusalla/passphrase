@@ -1,12 +1,17 @@
+import PropTypes from 'prop-types';
 import React, { useReducer } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import { connectSocket } from '../../shared/actions';
-import { gameStages, nameLengthLimit } from '../../shared/constants';
+import { baseUrl, gameStages, nameLengthLimit } from '../../shared/constants';
 import JoinForm from '../components/JoinForm';
 
-function JoinFormContainer() {
+function JoinFormContainer(props) {
+  const { location } = props;
+  const params = new URLSearchParams(location.search);
+  const gameCode = params.has('gamecode') ? params.get('gamecode').toUpperCase() : '';
+
   // Global state
   const gameStage = useSelector((state) => state.gameStage);
 
@@ -15,7 +20,8 @@ function JoinFormContainer() {
     (state, newState) => ({ ...state, ...newState }),
     {
       name: sessionStorage.getItem('name') || '',
-      gameCode: sessionStorage.getItem('gameCode') || '',
+      // Use game code from URL, followed by URL from session storage if either are present
+      gameCode: gameCode || sessionStorage.getItem('gameCode') || '',
     },
   );
 
@@ -25,8 +31,7 @@ function JoinFormContainer() {
     event.preventDefault();
     if (input.name && input.gameCode) {
       const uuid = sessionStorage.getItem('uuid');
-      // TODO: update URL for deployment
-      const url = `ws://192.168.1.21:8080/join?name=${input.name}&gameCode=${input.gameCode}&uuid=${uuid}`;
+      const url = `ws://${baseUrl}/join?name=${input.name}&gameCode=${input.gameCode}&uuid=${uuid}`;
       dispatch(connectSocket(url));
     }
   };
@@ -55,5 +60,13 @@ function JoinFormContainer() {
       );
   }
 }
+
+JoinFormContainer.propTypes = {
+  location: PropTypes.shape({ search: PropTypes.string.isRequired }),
+};
+
+JoinFormContainer.defaultProps = {
+  location: { search: '' },
+};
 
 export default JoinFormContainer;

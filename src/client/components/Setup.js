@@ -14,7 +14,8 @@ function Setup(props) {
     skipsAllowed,
     skipList,
     teamOne,
-    teamTwo } = props;
+    teamTwo,
+  } = props;
   const categoryOptions = categoryList.map((cat) => <option key={cat} value={cat}>{cat}</option>);
   const skipOptions = skipList.map((skip) => <option key={skip} value={skip}>{skip}</option>);
   const teamOneList = teamOne.map((playerName) => (
