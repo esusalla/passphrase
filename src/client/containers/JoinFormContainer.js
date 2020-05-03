@@ -27,8 +27,7 @@ function JoinFormContainer(props) {
 
   // Global state changes
   const dispatch = useDispatch();
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     if (input.name && input.gameCode) {
       const uuid = sessionStorage.getItem('uuid');
       const url = `ws://${baseUrl}/join?name=${input.name}&gameCode=${input.gameCode}&uuid=${uuid}`;

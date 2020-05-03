@@ -1,13 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+
+import { Button, Img, StyledLink, Wrapper } from '../styles';
+
 
 function Home() {
   return (
-    <div>
-      <Link to="/join">JOIN GAME</Link>
-      <br />
-      <Link to="/create">CREATE GAME</Link>
-    </div>
+    <Wrapper>
+      <Img src="images/pp-logo.png" alt="" />
+      <StyledLink to="/join"><Button type="button">JOIN GAME</Button></StyledLink>
+      <StyledLink to="/create"><Button type="button">CREATE GAME</Button></StyledLink>
+    </Wrapper>
   );
 }
 

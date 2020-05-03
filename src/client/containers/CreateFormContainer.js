@@ -15,8 +15,7 @@ function CreateFormContainer() {
 
   // Global state changes
   const dispatch = useDispatch();
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     if (name) {
       const url = `ws://${baseUrl}/create?name=${name}`;
       dispatch(connectSocket(url));

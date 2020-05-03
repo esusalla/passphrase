@@ -1,17 +1,19 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { Button, Input, Wrapper } from '../styles';
+
 function CreateForm(props) {
   const { handleChange, handleSubmit, name } = props;
 
   return (
-    <form onSubmit={handleSubmit}>
+    <Wrapper>
       <label htmlFor="name">
         Name
-        <input onChange={handleChange} name="name" placeholder="Name" type="text" value={name} />
+        <Input onChange={handleChange} name="name" placeholder="Name" type="text" value={name} />
       </label>
-      <input type="submit" value="CREATE GAME" />
-    </form>
+      <Button onClick={handleSubmit} type="button">CREATE GAME</Button>
+    </Wrapper>
   );
 }
 

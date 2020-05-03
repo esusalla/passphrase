@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
+import { GlobalStyle } from '../styles';
 import Home from '../components/Home';
 import CreateFormContainer from './CreateFormContainer';
 import GameEndContainer from './GameEndContainer';
@@ -19,6 +20,7 @@ function App() {
   // Conditionally renders setup container based on whether player is host or not
   return (
     <BrowserRouter>
+      <GlobalStyle />
       <Switch>
         <Route path="/" exact component={Home} />
         <Route path="/join" component={JoinFormContainer} />

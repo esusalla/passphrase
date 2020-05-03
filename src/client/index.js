@@ -11,12 +11,14 @@ import reducer from './reducer';
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // TODO: remove devtools for deployment
 const store = createStore(reducer, composeEnhancers(applyMiddleware(socket)));
 
-const run = () => ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root'),
-);
+const run = () => {
+  ReactDOM.render(
+    <Provider store={store}>
+      <App />
+    </Provider>,
+    document.getElementById('root'),
+  );
+};
 
 if (document.readyState !== 'loading') run();
 else if (document.addEventListener) document.addEventListener('DOMContentLoaded', run);
