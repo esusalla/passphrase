@@ -1,4 +1,5 @@
 .vscode
+assets
 build/**/*.html
 build/**/*.js
 node_modules
