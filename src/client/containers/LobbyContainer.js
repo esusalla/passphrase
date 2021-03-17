@@ -1,9 +1,9 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import React from "react";
+import { useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 
-import { gameStages } from '../../shared/constants';
-import Lobby from '../components/Lobby';
+import { gameStages } from "../../shared/constants";
+import Lobby from "../components/Lobby";
 
 function LobbyContainer() {
   // Global state

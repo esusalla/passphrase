@@ -7,7 +7,7 @@ function socketMiddleware() {
 
   const onMessage = (store) => (msg) => {
     const state = JSON.parse(msg.data);
-    // If initial create or join that includes UUID, save to session storage for reconnects
+    // If initial create or join includes UUID, save to session storage for reconnects
     if (state.uuid) {
       sessionStorage.setItem('uuid', state.uuid);
       sessionStorage.setItem('name', state.name);

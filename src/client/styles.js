@@ -10,6 +10,8 @@ export const GlobalStyle = createGlobalStyle`
   }
   
   body {
+    background-color: #4287f5;
+    background-image: linear-gradient(to top left, #23457d, #4287f5);
     height: 100%;
     margin: 0;
     padding: 0;

@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
-import React from 'react';
+import PropTypes from "prop-types";
+import React from "react";
 
 function RoundStart(props) {
   const { name, handleStartRound, playerOrder, teamOneScore, teamTwoScore } = props;

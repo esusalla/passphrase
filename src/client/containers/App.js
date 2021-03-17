@@ -1,16 +1,16 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import React from "react";
+import { useSelector } from "react-redux";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
-import { GlobalStyle } from '../styles';
-import Home from '../components/Home';
-import CreateFormContainer from './CreateFormContainer';
-import GameEndContainer from './GameEndContainer';
-import JoinFormContainer from './JoinFormContainer';
-import LobbyContainer from './LobbyContainer';
-import RoundActiveContainer from './RoundActiveContainer';
-import RoundStartContainer from './RoundStartContainer';
-import SetupContainer from './SetupContainer';
+import { GlobalStyle } from "../styles";
+import Home from "../components/Home";
+import CreateFormContainer from "./CreateFormContainer";
+import GameEndContainer from "./GameEndContainer";
+import JoinFormContainer from "./JoinFormContainer";
+import LobbyContainer from "./LobbyContainer";
+import RoundActiveContainer from "./RoundActiveContainer";
+import RoundStartContainer from "./RoundStartContainer";
+import SetupContainer from "./SetupContainer";
 
 function App() {
   // Global state

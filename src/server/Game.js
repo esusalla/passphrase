@@ -5,9 +5,10 @@ import {
   minPlayers,
   roundTimerMax,
   roundTimerMin,
-  scoreGoal } from '../shared/constants';
-import { genPlayerOrder, genRandomString, randomFromInterval, shuffle } from './utils';
-import wordLists from './wordLists';
+  scoreGoal
+} from "../shared/constants";
+import { genPlayerOrder, genRandomString, randomFromInterval, shuffle } from "./utils";
+import wordLists from "./wordLists";
 
 class Game {
   constructor(player) {
@@ -30,8 +31,8 @@ class Game {
     this.teamTwo = [];
 
     // Play state
-    this.currentWord = '';
-    this.lastWord = '';
+    this.currentWord = "";
+    this.lastWord = "";
     this.roundStartTime = 0;
     this.seenWords = new Set();
     this.teamOneScore = 0;
@@ -40,10 +41,10 @@ class Game {
 
   addPlayer(player) {
     // Check if game is currently in progress
-    if (this.gameStage !== gameStages.SETUP) return { error: 'Game is currently in progress' };
+    if (this.gameStage !== gameStages.SETUP) return { error: "Game is currently in progress" };
 
     // Check if a player with this name already exists in the game
-    if (this.players.has(player.name)) return { error: 'Player with this name already exists' };
+    if (this.players.has(player.name)) return { error: "Player with this name already exists" };
 
     this.players.set(player.name, player);
     if (this.teamOne.length <= this.teamTwo.length) this.teamOne.push(player.name);
@@ -57,7 +58,7 @@ class Game {
       // Preserve skips available for players reconnecting during their turn
       player.skipsAvailable = this.players.get(player.name).skipsAvailable;
 
-      // Replace game host reference if it's the host reconnecting
+      // Replace game host reference if it"s the host reconnecting
       if (this.host.uuid === player.uuid) this.host = player;
       this.players.set(player.name, player);
       return true;
@@ -105,7 +106,7 @@ class Game {
     this.currentWord = this.getNextWord();
     this.gameStage = gameStages.ROUND_ACTIVE;
     this.getActivePlayer().skipsAvailable = this.skipsAllowed;
-    this.lastWord = '';
+    this.lastWord = "";
     this.seenWords.add(this.currentWord);
     this.roundStartTime = new Date().getTime();
 
@@ -147,9 +148,9 @@ class Game {
 
   skipWord() {
     const activePlayer = this.getActivePlayer();
-    if (activePlayer.skipsAvailable === 'Unlimited' || activePlayer.skipsAvailable > 0) {
+    if (activePlayer.skipsAvailable === "Unlimited" || activePlayer.skipsAvailable > 0) {
       // If skips are not unlimited, reduce by one
-      if (activePlayer.skipsAvailable !== 'Unlimited') activePlayer.skipsAvailable -= 1;
+      if (activePlayer.skipsAvailable !== "Unlimited") activePlayer.skipsAvailable -= 1;
       this.currentWord = this.getNextWord();
       return true;
     }
@@ -195,9 +196,9 @@ class Game {
   }
 
   restart() {
-    this.currentWord = '';
+    this.currentWord = "";
     this.gameStage = gameStages.SETUP;
-    this.lastWord = '';
+    this.lastWord = "";
     this.teamOneScore = 0;
     this.teamTwoScore = 0;
   }

@@ -1,7 +1,7 @@
-import PropTypes from 'prop-types';
-import React from 'react';
+import PropTypes from "prop-types";
+import React from "react";
 
-import { Button, Input, Wrapper } from '../styles';
+import { Button, Input, Wrapper } from "../styles";
 
 function CreateForm(props) {
   const { handleChange, handleSubmit, name } = props;

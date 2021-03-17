@@ -1,10 +1,10 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 
-import { startRound } from '../../shared/actions';
-import { gameStages } from '../../shared/constants';
-import RoundStart from '../components/RoundStart';
+import { startRound } from "../../shared/actions";
+import { gameStages } from "../../shared/constants";
+import RoundStart from "../components/RoundStart";
 
 function RoundStartContainer() {
   // Global state

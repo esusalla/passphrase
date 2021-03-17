@@ -1,16 +1,16 @@
-import PropTypes from 'prop-types';
-import React, { useReducer } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import PropTypes from "prop-types";
+import React, { useReducer } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 
-import { connectSocket } from '../../shared/actions';
-import { baseUrl, gameStages, nameLengthLimit } from '../../shared/constants';
-import JoinForm from '../components/JoinForm';
+import { connectSocket } from "../../shared/actions";
+import { baseUrl, gameStages, nameLengthLimit } from "../../shared/constants";
+import JoinForm from "../components/JoinForm";
 
 function JoinFormContainer(props) {
   const { location } = props;
   const params = new URLSearchParams(location.search);
-  const gameCode = params.has('gamecode') ? params.get('gamecode').toUpperCase() : '';
+  const gameCode = params.has("gamecode") ? params.get("gamecode").toUpperCase() : "";
 
   // Global state
   const gameStage = useSelector((state) => state.gameStage);
@@ -19,9 +19,9 @@ function JoinFormContainer(props) {
   const [input, setInput] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     {
-      name: sessionStorage.getItem('name') || '',
+      name: sessionStorage.getItem("name") || "",
       // Use game code from URL, followed by URL from session storage if either are present
-      gameCode: gameCode || sessionStorage.getItem('gameCode') || '',
+      gameCode: gameCode || sessionStorage.getItem("gameCode") || "",
     },
   );
 
@@ -29,7 +29,7 @@ function JoinFormContainer(props) {
   const dispatch = useDispatch();
   const handleSubmit = () => {
     if (input.name && input.gameCode) {
-      const uuid = sessionStorage.getItem('uuid');
+      const uuid = sessionStorage.getItem("uuid");
       const url = `ws://${baseUrl}/join?name=${input.name}&gameCode=${input.gameCode}&uuid=${uuid}`;
       dispatch(connectSocket(url));
     }
@@ -38,8 +38,8 @@ function JoinFormContainer(props) {
   // Local state changes
   const handleChange = (event) => {
     const { name, value } = event.target;
-    // Update input unless it's name input and exceeds allowed length
-    if (!(name === 'name' && value.length > nameLengthLimit)) setInput({ [name]: value });
+    // Update input unless it"s name input and exceeds allowed length
+    if (!(name === "name" && value.length > nameLengthLimit)) setInput({ [name]: value });
   };
 
   // Multiple redirects for handling a player who disconnects during a game and then reconnects
@@ -65,7 +65,7 @@ JoinFormContainer.propTypes = {
 };
 
 JoinFormContainer.defaultProps = {
-  location: { search: '' },
+  location: { search: "" },
 };
 
 export default JoinFormContainer;

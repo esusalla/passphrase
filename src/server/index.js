@@ -1,15 +1,15 @@
-import compression from 'compression';
-import express from 'express';
-import helmet from 'helmet';
-import http from 'http';
-import path from 'path';
-import { v4 as uuidv4 } from 'uuid';
-import url from 'url';
-import WebSocket from 'ws';
+import compression from "compression";
+import express from "express";
+import helmet from "helmet";
+import http from "http";
+import path from "path";
+import { v4 as uuidv4 } from "uuid";
+import url from "url";
+import WebSocket from "ws";
 
-import * as actions from '../shared/actions';
-import * as handlers from './handlers';
-import { limitName } from './utils';
+import * as actions from "../shared/actions";
+import * as handlers from "./handlers";
+import { limitName } from "./utils";
 
 const games = new Map();
 
@@ -19,21 +19,21 @@ const wss = new WebSocket.Server({ server });
 
 app.use(compression());
 app.use(helmet());
-app.use(express.static(path.join(__dirname, 'public')));
-app.get(['/create', '/join'], (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
-app.get('*', (req, res) => res.redirect('/'));
+app.use(express.static(path.join(__dirname, "public")));
+app.get(["/create", "/join"], (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
+app.get("*", (req, res) => res.redirect("/"));
 
-wss.on('connection', (player, req) => {
+wss.on("connection", (player, req) => {
   const parsedUrl = url.parse(req.url, true);
   const { pathname, query } = parsedUrl;
 
-  player.gameCode = (query.gameCode || '').toUpperCase();
+  player.gameCode = (query.gameCode || "").toUpperCase();
   player.name = limitName(query.name);
   player.uuid = query.uuid || uuidv4();
 
   // New players can only connect by creating or joining game
-  if (pathname === '/create') player.gameCode = handlers.createGame(player, games);
-  else if (pathname === '/join') handlers.joinGame(player, games);
+  if (pathname === "/create") player.gameCode = handlers.createGame(player, games);
+  else if (pathname === "/join") handlers.joinGame(player, games);
   else {
     player.close();
     return;
@@ -41,10 +41,10 @@ wss.on('connection', (player, req) => {
 
   // Used with ping from socket server to detect disconnected sockets
   player.connected = true;
-  player.on('pong', () => { player.connected = true; });
+  player.on("pong", () => { player.connected = true; });
 
   // Handle all client messages
-  player.on('message', (msg) => {
+  player.on("message", (msg) => {
     const data = JSON.parse(msg);
     if (!games.has(player.gameCode)) return;
     const game = games.get(player.gameCode);
@@ -83,7 +83,7 @@ wss.on('connection', (player, req) => {
   });
 
   // On socket close, check if all other players in game are disconnected and delete game if so
-  player.on('close', () => {
+  player.on("close", () => {
     if (!games.has(player.gameCode)) return;
     const game = games.get(player.gameCode);
 
@@ -106,7 +106,7 @@ const interval = setInterval(() => {
   });
 }, 30000);
 
-wss.on('close', () => {
+wss.on("close", () => {
   clearInterval(interval);
 });
 

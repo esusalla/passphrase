@@ -1,5 +1,5 @@
-import { categoryList, skipList } from '../shared/constants';
-import Game from './Game';
+import { categoryList, skipList } from "../shared/constants";
+import Game from "./Game";
 
 export function createGame(player, games) {
   // Iterate to make sure there are no duplicate game codes
@@ -28,7 +28,7 @@ export function createGame(player, games) {
 export function joinGame(player, games) {
   // Check if game code is valid
   if (!games.has(player.gameCode)) {
-    player.send(JSON.stringify({ error: 'Game with this code does not exist' }));
+    player.send(JSON.stringify({ error: "Game with this code does not exist" }));
     player.close();
     return;
   }
@@ -37,8 +37,8 @@ export function joinGame(player, games) {
 
   // Check if player was previously connected
   if (game.reconnectPlayer(player)) {
-    // Only send current word if it's reconnected player's turn
-    const currentWord = game.getActivePlayer() === player.name ? game.currentWord : '';
+    // Only send current word if it"s reconnected player"s turn
+    const currentWord = game.getActivePlayer() === player.name ? game.currentWord : "";
     const elapsedRoundTime = new Date().getTime() - game.roundStartTime;
 
     // Send reconnected player full game state
@@ -89,7 +89,8 @@ export function joinGame(player, games) {
     if (otherPlayerName !== player.name) {
       otherPlayer.send(JSON.stringify({
         teamOne: game.teamOne,
-        teamTwo: game.teamTwo }));
+        teamTwo: game.teamTwo
+      }));
     }
   }
 }
@@ -200,7 +201,8 @@ export function passToNextPlayer(player, game) {
     if (otherPlayerName !== activePlayer.name) {
       otherPlayer.send(JSON.stringify({
         lastWord: game.lastWord,
-        playerOrder: game.playerOrder }));
+        playerOrder: game.playerOrder
+      }));
     }
   }
 

@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
-import React from 'react';
+import PropTypes from "prop-types";
+import React from "react";
 
 function Lobby(props) {
   const { category, gameCode, hostName, skipsAllowed, teamOne, teamTwo } = props;

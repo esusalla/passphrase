@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 
-import { passToNextPlayer, useSkip } from '../../shared/actions';
-import { gameStages, tickRunTimeOne, tickRunTimeTwo } from '../../shared/constants';
-import RoundActive from '../components/RoundActive';
+import { passToNextPlayer, useSkip } from "../../shared/actions";
+import { gameStages, tickRunTimeOne, tickRunTimeTwo } from "../../shared/constants";
+import RoundActive from "../components/RoundActive";
 
 function RoundActiveContainer() {
   // Global state
@@ -26,7 +26,7 @@ function RoundActiveContainer() {
   // Global state changes
   const dispatch = useDispatch();
   const handlePassToNextPlayer = () => dispatch(passToNextPlayer());
-  const handleUseSkip = () => { if (skipsAvailable === 'Unlimited' || skipsAvailable > 0) dispatch(useSkip()); };
+  const handleUseSkip = () => { if (skipsAvailable === "Unlimited" || skipsAvailable > 0) dispatch(useSkip()); };
 
   const loopAudio = (audioFile) => {
     const newAudio = new Audio(audioFile);
@@ -50,13 +50,13 @@ function RoundActiveContainer() {
 
       // Play increasingly faster tick tocks as active round progresses
       // Ternary expressions used to prevent audio loading if not needed due to player reconnecting mid-round
-      let tickTock = timerOne ? loopAudio('./audio/tick-tock-1.mp3') : null;
+      let tickTock = timerOne ? loopAudio("./audio/tick-tock-1.mp3") : null;
       let timeout = setTimeout(() => {
         if (tickTock) tickTock.pause();
-        tickTock = timerTwo ? loopAudio('./audio/tick-tock-2.mp3') : null;
+        tickTock = timerTwo ? loopAudio("./audio/tick-tock-2.mp3") : null;
         timeout = setTimeout(() => {
           if (tickTock) tickTock.pause();
-          tickTock = loopAudio('./audio/tick-tock-3.mp3');
+          tickTock = loopAudio("./audio/tick-tock-3.mp3");
         }, timerTwo);
         setAudioTimeout(timeout);
       }, timerOne);
@@ -64,12 +64,12 @@ function RoundActiveContainer() {
     } else if (gameStage === gameStages.ROUND_START) {
       // Play buzz on round end transition back to round start
       clearAudio();
-      const buzz = new Audio('./audio/buzz.mp3');
+      const buzz = new Audio("./audio/buzz.mp3");
       buzz.play();
     } else if (gameStage === gameStages.GAME_END) {
       // Play trumpets on round end transition to game end
       clearAudio();
-      const trumpets = new Audio('./audio/trumpets.mp3');
+      const trumpets = new Audio("./audio/trumpets.mp3");
       trumpets.play();
     } else if (!connected) {
       // Cancel all audio if socket is disconnected

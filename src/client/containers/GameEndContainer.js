@@ -1,10 +1,10 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 
-import { restartGame } from '../../shared/actions';
-import { gameStages } from '../../shared/constants';
-import GameEnd from '../components/GameEnd';
+import { restartGame } from "../../shared/actions";
+import { gameStages } from "../../shared/constants";
+import GameEnd from "../components/GameEnd";
 
 function GameEndContainer() {
   // Global state

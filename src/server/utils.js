@@ -1,6 +1,6 @@
-import crypto from 'crypto';
+import crypto from "crypto";
 
-import { nameLengthLimit } from '../shared/constants';
+import { nameLengthLimit } from "../shared/constants";
 
 export function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i -= 1) {
@@ -29,7 +29,7 @@ export function genPlayerOrder(teamOne, teamTwo) {
 }
 
 export function genRandomString(len) {
-  return crypto.randomBytes(len).toString('hex').substring(0, len).toUpperCase();
+  return crypto.randomBytes(len).toString("hex").substring(0, len).toUpperCase();
 }
 
 export function limitName(name) {

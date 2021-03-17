@@ -1,10 +1,10 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 
-import { changePlayerTeam, randomizeTeams, setCategory, setSkipsAllowed, startGame } from '../../shared/actions';
-import { categoryList, gameStages, minPlayers, skipList } from '../../shared/constants';
-import Setup from '../components/Setup';
+import { changePlayerTeam, randomizeTeams, setCategory, setSkipsAllowed, startGame } from "../../shared/actions";
+import { categoryList, gameStages, minPlayers, skipList } from "../../shared/constants";
+import Setup from "../components/Setup";
 
 function SetupContainer() {
   // Global state
@@ -21,7 +21,7 @@ function SetupContainer() {
   const handleCategoryChange = (event) => dispatch(setCategory(event.target.value));
   const handlePlayerTeamChange = (event) => {
     const parent = event.target.parentElement;
-    dispatch(changePlayerTeam(parent.getAttribute('value')));
+    dispatch(changePlayerTeam(parent.getAttribute("value")));
   };
   const handleRandomizeTeams = () => dispatch(randomizeTeams());
   const handleSkipsAllowedChange = (event) => dispatch(setSkipsAllowed(event.target.value));

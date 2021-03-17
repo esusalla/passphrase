@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import { Button, Img, StyledLink, Wrapper } from '../styles';
+import { Button, Img, StyledLink, Wrapper } from "../styles";
 
 
 function Home() {

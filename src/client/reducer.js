@@ -1,28 +1,28 @@
-import * as actions from '../shared/actions';
-import { gameStages } from '../shared/constants';
+import * as actions from "../shared/actions";
+import { gameStages } from "../shared/constants";
 
 // State kept together to allow bulk updates of game state from server
 const initialState = {
   // Initial connect state
   connected: false,
-  gameCode: '',
+  gameCode: "",
   gameStage: gameStages.INIT,
-  hostName: '',
-  name: '',
-  uuid: '',
+  hostName: "",
+  name: "",
+  uuid: "",
 
   // Setup state
-  category: '',
+  category: "",
   playerOrder: [],
-  skipsAllowed: '',
+  skipsAllowed: "",
   teamOne: [],
   teamTwo: [],
 
   // Round state
-  currentWord: '',
+  currentWord: "",
   elapsedRoundTime: 0,
-  lastWord: '',
-  skipsAvailable: '',
+  lastWord: "",
+  skipsAvailable: "",
   teamOneScore: 0,
   teamTwoScore: 0,
 };
@@ -60,7 +60,7 @@ function reducer(state = initialState, action) {
 
     case actions.USE_SKIP:
       // If skips are not unlimited, reduce by one
-      if (state.skipsAvailable !== 'Unlimited') {
+      if (state.skipsAvailable !== "Unlimited") {
         const skipsAvailable = state.skipsAvailable - 1;
         return { ...state, skipsAvailable };
       }
